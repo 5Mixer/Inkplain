@@ -4,6 +4,15 @@ var currX = 0
 var prevY = 0
 var currY = 0
 var frameShowsUpToEvent = 0
+var brush = {
+	thickness: 10,
+	color: "red"
+}
+var eventTypes = {
+	drawing: "a",
+	moving: "b",
+	brush: "c"
+}
 
 var recorder = new Recorder()
 var renderer = new Renderer()
@@ -18,20 +27,20 @@ canvas.addEventListener("mousedown", function (e) {
 		// Keep event recording of drawing outside should draw, as should draw may be called during recording to render frame
 		shouldDraw(true)
 		if (recorder.recording)
-			recorder.record({type:"drawing", isDrawing: down})
+			recorder.record({type:eventTypes.drawing, isDrawing: down})
 		startDrawing(e)
 	}
 }, false);
 canvas.addEventListener("mouseup", function (e) {
 	if (recorder.recording){
 		shouldDraw(false)
-		recorder.record({type:"drawing", isDrawing: down })
+		recorder.record({type:eventTypes.drawing, isDrawing: down })
 	}
 }, false);
 canvas.addEventListener("mouseout", function (e) {
 	if (recorder.recording) {
 		shouldDraw(false)
-		recorder.record({type:"drawing", isDrawing: down })
+		recorder.record({type:eventTypes.drawing, isDrawing: down })
 	}
 }, false);
 
@@ -53,8 +62,11 @@ function recToggle(){
 	currY = 0
 	frameShowsUpToEvent = 0
 
-	if (recorder.recording)
+	if (recorder.recording){
 		recorder.startRecording()
+
+		recorder.record({ type: eventTypes.brush, brush })
+	}
 }
 
 // Draw up to a specific time by recursively running playEventRecursive
@@ -67,7 +79,7 @@ function playEventRecursive(records,i,upTo) {
 	if (records[i].time > upTo)
 		return
 
-	if (records[i].type == "move"){
+	if (records[i].type == eventTypes.move){
 		// set previous coords based on current, and load current from event
 		renderer.previousPos.x = renderer.currentPos.x
 		renderer.previousPos.y = renderer.currentPos.y
@@ -84,11 +96,14 @@ function playEventRecursive(records,i,upTo) {
 		if (renderer.down)
 			renderer.draw()
 	}
-	if (records[i].type == "drawing"){
+	if (records[i].type == eventTypes.drawing){
 		flag = true
 		renderer.down = records[i].isDrawing
 		if (renderer.down)
 			renderer.startedDrawing = true
+	}
+	if (records[i].type == eventTypes.brush){
+		renderer.brush = records[i].brush
 	}
 
 	if (i < records.length - 2){
@@ -117,7 +132,7 @@ setInterval(function(){
 		}
 		if (flag){
 			flag = false
-			recorder.record({type:"move",coords:{x:currX, y: currY}})
+			recorder.record({type:eventTypes.move,coords:{x:currX, y: currY}})
 			document.getElementById('fileSize').innerText = Math.round(JSON.stringify(recorder.recordStore).length/100)/10 + " KB"
 		}
 
@@ -130,7 +145,7 @@ setInterval(function(){
 		playback(recorder.recordStore, recorder.recordStore[recorder.recordStore.length - 1].time * parseFloat(document.getElementById("myRange").value)/10000)
 		renderer.drawPointer()
 	}
-}, 1000/160)
+}, 1000/60)
 function move(e) {
 	if (!recorder.recording) return
 

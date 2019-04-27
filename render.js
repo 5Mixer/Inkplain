@@ -10,6 +10,11 @@ function Renderer () {
 	w = this.canvas.width;
 	h = this.canvas.height;
 
+	this.brush = {
+		thickness: 2,
+		color: "black"
+	}
+
 	// background image
 	var img = new Image();
 	img.src = "bg.png"
@@ -19,15 +24,22 @@ function Renderer () {
 		this.ctx.fillRect(0,0,w,h)
 		this.ctx.fillStyle = "black"
 		this.ctx.drawImage(img, 0, 0);
+		this.brush = {
+			thickness: 2,
+			color: "black"
+		}
+ 
 		
 		this.currentPos = { x: 0, y: 0}
 		this.previousPos = { x: 0, y: 0}
 		this.down = false
 		this.startedDrawing = false // true means point is a start point - should not have a prev.
 	}
+	this.clear()
 	this.draw = function() {
 		this.ctx.beginPath()
-		this.ctx.lineWidth = 2
+		this.ctx.lineWidth = this.brush.thickness
+		this.ctx.strokeStyle = this.brush.color
 		this.ctx.lineJoin = this.ctx.lineCap = "round"
 		// this.ctx.moveTo(prevX, prevY)
 		// this.ctx.lineTo(currX, currY)
@@ -41,7 +53,7 @@ function Renderer () {
 	this.drawPointer = function () {
 		this.ctx.beginPath();
 		this.ctx.lineWidth = 1
-		this.ctx.arc(currX, currY, 5, 0, 2 * Math.PI);
+		this.ctx.arc(this.currentPos.x, this.currentPos.y, 5, 0, 2 * Math.PI);
 		this.ctx.stroke();
 	}
 
