@@ -5,8 +5,8 @@ var prevY = 0
 var currY = 0
 var frameShowsUpToEvent = 0
 var brush = {
-	thickness: 10,
-	color: "red"
+	thickness: 2,
+	color: "black"
 }
 var eventTypes = {
 	drawing: "a",
@@ -49,6 +49,11 @@ function shouldDraw (draw) {
 	flag = true // Says that an event should be recorded for the next movement, as down state has changed
 }
 
+function brushColour (col){
+	brush.color = col
+	recorder.record({type:eventTypes.brush,brush:JSON.parse(JSON.stringify(brush))})
+}
+
 // Switch recording mode on/off
 function recToggle(){
 	recorder.recording = !recorder.recording
@@ -61,11 +66,15 @@ function recToggle(){
 	prevY = 0
 	currY = 0
 	frameShowsUpToEvent = 0
+	brush = {
+		thickness: 2,
+		color: "black"
+	}
 
 	if (recorder.recording){
 		recorder.startRecording()
 
-		recorder.record({ type: eventTypes.brush, brush })
+		recorder.record({ type: eventTypes.brush, brush: JSON.parse(JSON.stringify(brush)) })
 	}
 }
 
