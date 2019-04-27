@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>annotate</title>
+		<link rel="stylesheet" href="style.css">
+	</head>
+	<body>
+		<h1>Annotate</h1>
+		<button id="recBtn" onclick='recToggle()'>rec</button><br/>
+		<input type="range" min="1" max="10000" value="5000" class="slider" id="myRange"><br/>
+		<span id="fileSize">0</span><br/>
+		<canvas id="board" width=1200 height=700>
+		<script src="render.js"></script>
+		<script src="record.js"></script>
+		<script src="app.js"></script>
+	</body>
+</html>
