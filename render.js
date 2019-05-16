@@ -1,7 +1,7 @@
 function Renderer () {
 
 	this.canvas = document.getElementById('board')
-	this.ctx = this.canvas.getContext('2d')
+	this.ctx = this.canvas.getContext('2d',{desynchronized:true})
 
 	this.currentPos = { x: 0, y: 0}
 	this.previousPos = { x: 0, y: 0}
@@ -23,12 +23,11 @@ function Renderer () {
 		this.ctx.fillStyle = "white"
 		this.ctx.fillRect(0,0,w,h)
 		this.ctx.fillStyle = "black"
-		this.ctx.drawImage(img, 0, 0);
+		//this.ctx.drawImage(img, 0, 0);
 		this.brush = {
 			thickness: 2,
 			color: "black"
 		}
- 
 		
 		this.currentPos = { x: 0, y: 0}
 		this.previousPos = { x: 0, y: 0}
@@ -41,11 +40,10 @@ function Renderer () {
 		this.ctx.lineWidth = this.brush.thickness
 		this.ctx.strokeStyle = this.brush.color
 		this.ctx.lineJoin = this.ctx.lineCap = "round"
-		// this.ctx.moveTo(prevX, prevY)
-		// this.ctx.lineTo(currX, currY)
 	
-		this.ctx.quadraticCurveTo(this.previousPos.x, this.previousPos.y, this.currentPos.x, this.currentPos.y)
-
+		// this.ctx.quadraticCurveTo(this.previousPos.x, this.previousPos.y, this.currentPos.x, this.currentPos.y)
+		this.ctx.moveTo(this.previousPos.x, this.previousPos.y)
+		this.ctx.lineTo(this.currentPos.x, this.currentPos.y)
 
 		this.ctx.stroke()
 		this.ctx.closePath()

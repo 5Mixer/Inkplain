@@ -132,7 +132,8 @@ function startDrawing(e){
 	currX = e.clientX - canvas.offsetLeft;
 	currY = e.clientY - canvas.offsetTop;
 }
-setInterval(function(){
+drawframe = function() {
+
 	if (recorder.recording){
 		// renderer.clear()
 		if (recorder.recordStore.length != 0){
@@ -142,19 +143,19 @@ setInterval(function(){
 		if (flag){
 			flag = false
 			recorder.record({type:eventTypes.move,coords:{x:currX, y: currY}})
-			document.getElementById('fileSize').innerText = Math.round(JSON.stringify(recorder.recordStore).length/100)/10 + " KB"
+			document.getElementById('fileSize').innerText = Math.round(JSON.stringify(recorder.recordStore).length/100)/10 + " KB" + recorder.recordStore.length
 		}
-
-		// Pointer circle during recording
-		// renderer.drawPointer()
 	}else{
 		renderer.clear()
-		if (recorder.recordStore.length == 0)
-			return
-		playback(recorder.recordStore, recorder.recordStore[recorder.recordStore.length - 1].time * parseFloat(document.getElementById("myRange").value)/10000)
-		renderer.drawPointer()
+		if (recorder.recordStore.length != 0){
+			playback(recorder.recordStore, recorder.recordStore[recorder.recordStore.length - 1].time * parseFloat(document.getElementById("myRange").value)/10000)
+			renderer.drawPointer()
+		}
 	}
-}, 1000/60)
+	requestAnimationFrame(drawframe)
+}
+drawframe()
+// setInterval(drawframe, 1000/120)
 function move(e) {
 	if (!recorder.recording) return
 
