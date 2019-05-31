@@ -1,7 +1,7 @@
 function Renderer () {
 
 	this.canvas = document.getElementById('board')
-	this.ctx = this.canvas.getContext('2d',{desynchronized:true})
+	this.ctx = this.canvas.getContext('2d',{desynchronized:true, alpha: false})
 
 	this.currentPos = { x: 0, y: 0}
 	this.previousPos = { x: 0, y: 0}
@@ -23,7 +23,7 @@ function Renderer () {
 		this.ctx.fillStyle = "white"
 		this.ctx.fillRect(0,0,w,h)
 		this.ctx.fillStyle = "black"
-		//this.ctx.drawImage(img, 0, 0);
+		this.ctx.drawImage(img, 0, 0);
 		this.brush = {
 			thickness: 2,
 			color: "black"

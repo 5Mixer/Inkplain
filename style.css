@@ -1,6 +1,10 @@
 canvas {
-	border: black 1px solid;
+}
+.canvasContainer {
+	background: black;
+	/* padding: 5px; */
+	display: inline-block;
 }
 .slider {
-	width: 500px;
+	width: 900px;
 }

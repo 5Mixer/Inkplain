@@ -6,15 +6,23 @@
 		<link rel="stylesheet" href="style.css">
 	</head>
 	<body>
-		<h1>Annotate</h1>
-		<button id="recBtn" onclick='recToggle()'>rec</button><br/>
-		<button id="recBtn" onclick='brushColour("black")'>black</button><br/>
-		<button id="recBtn" onclick='brushColour("blue")'>blue</button><br/>
-		<button id="recBtn" onclick='brushColour("white")'>white</button><br/>
-		<input type="range" min="1" max="10000" value="5000" class="slider" id="myRange"><br/>
+		<h1>Annotatee</h1>
+		<button id="recBtn" onclick='recToggle()'>rec</button>
+		<button id="recBtn" onclick='brushColour("black")'>black</button>
+		<button id="recBtn" onclick='brushColour("blue")'>blue</button>
+		<button id="recBtn" onclick='brushColour("white")'>white</button>
+		<button id="recBtn" onclick='clearCanvas()'>clear</button>
+
 		<span id="fileSize">0</span><br/>
-		<canvas id="board" width=1200 height=700>
+		<input type="range" min="1" max="30" value="2" id="thickness" oninput="brushWidth(this.value)">
+	
+		<audio src="" id="recordedAudio" controls class="slider"></audio>
+
+		<div class="canvasContainer">
+			<canvas id="board" width=1200 height=700>
+		</div>
 		<script src="render.js"></script>
+		<script src="audio.js"></script>
 		<script src="record.js"></script>
 		<script src="app.js"></script>
 	</body>
