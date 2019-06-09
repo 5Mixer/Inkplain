@@ -9,7 +9,7 @@ function Renderer (canvas) {
 
 	this.brush = {
 		thickness: 2,
-		color: "black"
+		colour: "black"
 	}
 
 	// background image
@@ -20,10 +20,10 @@ function Renderer (canvas) {
 		this.ctx.fillStyle = "white"
 		this.ctx.fillRect(0,0,this.canvas.width,this.canvas.height)
 		this.ctx.fillStyle = "black"
-		this.ctx.drawImage(img, 0, 0);
+		// this.ctx.drawImage(img, 0, 0);
 		this.brush = {
 			thickness: 2,
-			color: "black"
+			colour: "black"
 		}
 		
 		this.currentPos = { x: 0, y: 0}
@@ -35,7 +35,7 @@ function Renderer (canvas) {
 	this.draw = function() {
 		this.ctx.beginPath()
 		this.ctx.lineWidth = this.brush.thickness
-		this.ctx.strokeStyle = this.brush.color
+		this.ctx.strokeStyle = this.brush.colour
 		this.ctx.lineJoin = "round"
 		this.ctx.lineCap = "round"
 	

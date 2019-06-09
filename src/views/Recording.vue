@@ -1,8 +1,7 @@
 <template>
 	<div>
-		<h1>Record</h1>		
-		<annotation-canvas :bus="bus"></annotation-canvas>
-		<annotation-tools @toggleRec="toggleRec" @colourPick="changeColour"></annotation-tools>			
+		<annotation-canvas :bus="bus" :recording="recording"></annotation-canvas>
+		<annotation-tools :recording="recording" @toggleRec="toggleRec" @colourPick="changeColour" @clearCanvas="clearCanvas" @toolSelect="toolSelect" @brushWidth="brushWidth"></annotation-tools>
 	</div>
 </template>
 
@@ -19,14 +18,27 @@ export default {
 	},
 	data: function () {
 		return {
-			bus: bus
+			bus: bus,
+			recording: false
 		}
 	},
 	methods: {
 		changeColour: function (colour) {
+			bus.$emit("colourPick", colour)
 		},
 		toggleRec: function () {
 			bus.$emit("recToggle")
+			this.recording = !this.recording
+			console.log(this.recording)
+		},
+		toolSelect: function (tool) {
+			bus.$emit("toolSelect",tool)
+		},
+		clearCanvas: function () {
+			bus.$emit("clearCanvas")
+		},
+		brushWidth: function (width) {
+			bus.$emit("brushWidth", width)
 		}
 	}
 }
@@ -37,9 +49,9 @@ annotation-tools {
 	height: 90px;
 }
 
-canvas {
+annotation-canvas {
 	width: 100%;
-	height: calc(900px - 150px);
+	height: 600px;
 	border: 2px solid black;
 }
 </style>

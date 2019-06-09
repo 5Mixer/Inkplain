@@ -1,15 +1,15 @@
 <template>
 	<div class="container">
-		<span class="tool-button">Pen</span>
-		<span class="tool-button">Highlighter</span>
-		<span class="tool-button">Eraser</span>
-		<span class="tool-button">Clear Canvas</span>
+		<span class="tool-button" @click="toolSelect('pen')">Pen</span>
+		<span class="tool-button" @click="toolSelect('highlighter')">Highlighter</span>
+		<span class="tool-button" @click="toolSelect('eraser')">Eraser</span>
+		<span class="tool-button" @click="clearCanvas()">Clear Canvas</span>
 		
-		<span class="tool-button red" @click="toggleRecording">Record</span>
+		<span v-bind:class="{ red: recording }" class="tool-button" @click="toggleRecording">{{recording ? 'Recording' : 'Record'}}</span>
 
 		<colour-picker @colourPick="colourPick"></colour-picker>
 		<span class="tool-button">
-			<input type="range" min="1" max="30" value="2" class="thicknessSlider" oninput="brushWidth(this.value)">
+			<input type="range" min="1" max="30" value="2" class="thicknessSlider" v-on:input="brushWidth(this.value)">
 		</span>
 	</div>
 </template>
@@ -22,27 +22,36 @@ export default {
 	components: {
 		ColourPicker
 	},
+	props: ['recording'],
 	methods: {
 		colourPick: function (colour) {
 			this.$emit("colourPick", colour)
 		},
 		toggleRecording: function () {
 			this.$emit("toggleRec")
-		}
+		},
+		toolSelect: function (tool) {
+			this.$emit("toolSelect", tool)
+		},
+		clearCanvas: function () {
+			this.$emit("clearCanvas")
+		},
+		brushWidth: function (width) {
+			console.log("spook")
+			this.$emit("brushWidth", width)
+		}.bind(this)
 	}
 }
 </script>
 
 <style scoped lang="scss">
-.red {
-	background: "red";
-}
 .container {
 	background-color: #eee;
 	height: 100%;
 	border-radius: 3px;
 	padding-top: 20px;
 	text-align: center;
+	box-sizing: border-box;
 }
 .tool-button {
 	display: inline-block;
@@ -63,6 +72,11 @@ export default {
 	-moz-user-select: none; /* Firefox */
 	-ms-user-select: none; /* IE10+/Edge */
 	user-select: none; /* Standard */
+}
+.red {
+	border: solid 1px red;
+    box-shadow: 0 0 3px red;
+	font-weight: bold;
 }
 .thicknessSlider {
 	vertical-align: top;

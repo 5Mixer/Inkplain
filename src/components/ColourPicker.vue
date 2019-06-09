@@ -35,8 +35,8 @@ export default {
 	padding: 20px;
 	vertical-align: top;
 	
-	width: 680px;
-	height: 70px;
+	width: 440px;
+	height: 20px;
 }
 .colour-swatch {
 	display: inline-block;
@@ -45,14 +45,17 @@ export default {
 	text-align: center;
 	vertical-align: top;
 
+	position: relative;
+	top: -10px;
+
 	margin: 2px;
 	padding: 5px;
 
 	border-radius: 10px;
 	border: #0002 solid 2px;
 	
-	width: 30px;
-	height: 30px;
-	line-height: calc(10px - .5em);
+	width: 50px;
+	height: 20px;
+	line-height: calc(0px - 0.5em);
 }
 </style>
