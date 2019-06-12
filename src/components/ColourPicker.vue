@@ -32,10 +32,11 @@ export default {
 
 	margin: 20px;
 	margin-top: 0;
+	margin-bottom: 0;
 	padding: 20px;
 	vertical-align: top;
 	
-	width: 440px;
+	width: 200px;
 	height: 20px;
 }
 .colour-swatch {
@@ -46,16 +47,14 @@ export default {
 	vertical-align: top;
 
 	position: relative;
-	top: -10px;
+	top: -13px;
 
-	margin: 2px;
-	padding: 5px;
+	margin: 3px;
 
-	border-radius: 10px;
+	border-radius: 4px;
 	border: #0002 solid 2px;
 	
-	width: 50px;
+	width: 20px;
 	height: 20px;
-	line-height: calc(0px - 0.5em);
 }
 </style>

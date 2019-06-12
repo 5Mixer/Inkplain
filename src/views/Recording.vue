@@ -1,7 +1,7 @@
 <template>
 	<div>
-		<annotation-canvas :bus="bus" :recording="recording"></annotation-canvas>
-		<annotation-tools :recording="recording" @toggleRec="toggleRec" @colourPick="changeColour" @clearCanvas="clearCanvas" @toolSelect="toolSelect" @brushWidth="brushWidth"></annotation-tools>
+		<annotation-canvas :bus="bus" :recording="recording" :micActive="micActive"></annotation-canvas>
+		<annotation-tools :recording="recording" @toggleMic="toggleMic" @toggleRec="toggleRec" @colourPick="changeColour" @clearCanvas="clearCanvas" @toolSelect="toolSelect" @brushWidth="brushWidth"></annotation-tools>
 	</div>
 </template>
 
@@ -19,7 +19,8 @@ export default {
 	data: function () {
 		return {
 			bus: bus,
-			recording: false
+			recording: false,
+			micActive: false
 		}
 	},
 	methods: {
@@ -29,7 +30,10 @@ export default {
 		toggleRec: function () {
 			bus.$emit("recToggle")
 			this.recording = !this.recording
-			console.log(this.recording)
+		},
+		toggleMic: function () {
+			bus.$emit("micToggle")
+			this.micActive = !this.micActive
 		},
 		toolSelect: function (tool) {
 			bus.$emit("toolSelect",tool)

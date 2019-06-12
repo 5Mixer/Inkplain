@@ -1,11 +1,12 @@
 <template>
-	<div class="container">
+	<div class="tool-container">
 		<span class="tool-button" @click="toolSelect('pen')">Pen</span>
 		<span class="tool-button" @click="toolSelect('highlighter')">Highlighter</span>
 		<span class="tool-button" @click="toolSelect('eraser')">Eraser</span>
-		<span class="tool-button" @click="clearCanvas()">Clear Canvas</span>
+		<span class="tool-button" @click="clearCanvas()">Clear</span>
 		
 		<span v-bind:class="{ red: recording }" class="tool-button" @click="toggleRecording">{{recording ? 'Recording' : 'Record'}}</span>
+		<span v-bind:class="{ blue: micActive }" class="tool-button" @click="toggleMicrophone">{{micActive ? 'Mic On' : 'Mic Off'}}</span>
 
 		<colour-picker @colourPick="colourPick"></colour-picker>
 		<span class="tool-button">
@@ -22,13 +23,16 @@ export default {
 	components: {
 		ColourPicker
 	},
-	props: ['recording'],
+	props: ['recording', 'micActive'],
 	methods: {
 		colourPick: function (colour) {
 			this.$emit("colourPick", colour)
 		},
 		toggleRecording: function () {
 			this.$emit("toggleRec")
+		},
+		toggleMicrophone: function () {
+			this.$emit("toggleMic")
 		},
 		toolSelect: function (tool) {
 			this.$emit("toolSelect", tool)
@@ -45,11 +49,13 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.container {
+.tool-container {
 	background-color: #eee;
 	height: 100%;
 	border-radius: 3px;
-	padding-top: 20px;
+	margin-top: 1em;
+	padding-top: 10px;
+	padding-bottom: 10px;
 	text-align: center;
 	box-sizing: border-box;
 }
@@ -60,13 +66,16 @@ export default {
 	background-color: #ddd;
 	text-align: center;
 
-	margin: 20px;
+	margin: 5px;
 	margin-top: 0;
+	margin-bottom: 0;
 	padding: 20px;
 	
-	width: 200px;
+	width: 110px;
 	height: 20px;
 	line-height: calc(10px - .5em);
+
+	font-size: 1em;
 
 	-webkit-user-select: none; /* Safari */
 	-moz-user-select: none; /* Firefox */
@@ -76,6 +85,11 @@ export default {
 .red {
 	border: solid 1px red;
     box-shadow: 0 0 3px red;
+	font-weight: bold;
+}
+.blue {
+	border: solid 1px blue;
+    box-shadow: 0 0 3px blue;
 	font-weight: bold;
 }
 .thicknessSlider {

@@ -1,7 +1,8 @@
 function AudioManager (audioElement) {
-	navigator.mediaDevices.getUserMedia({audio:true})
+	this.activateAudio = function() {
+		navigator.mediaDevices.getUserMedia({audio:true})
 		.then(stream => {this.handlerFunction(stream)})
-
+	}
 	this.handlerFunction = function (stream) {
 		this.rec = new MediaRecorder(stream);
 		this.rec.ondataavailable = e => {
@@ -22,7 +23,8 @@ function AudioManager (audioElement) {
 		this.rec.start();
 	}
 	this.stopRecordingAudio = function () {
-		this.rec.stop();
+		if (this.rec != undefined)
+			this.rec.stop();
 	}
 
 	return this

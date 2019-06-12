@@ -9,6 +9,7 @@ function AnnotationCanvas (canvas, audioElement) {
 		brush: 3,
 		clear: 4
 	}
+	this.recordAudio = false
 
 	this.recorder = new Recorder()
 	this.renderer = new Renderer(canvas)
@@ -29,7 +30,7 @@ function AnnotationCanvas (canvas, audioElement) {
 		const rect = canvas.getBoundingClientRect()
 		const events = e.getCoalescedEvents();
 		events.forEach((e) => {
-			let record = {type:this.eventTypes.move,coords:{x:Math.round(e.clientX - rect.left), y: Math.round(e.clientY - rect.top)}}
+			let record = {type:this.eventTypes.move,coords:{x:Math.round((e.clientX - rect.left)/canvas.clientWidth*1920), y: Math.round((e.clientY - rect.top)/canvas.clientHeight*1080)}}
 			this.recorder.record(record)
 			this.playRecord(record)
 		})
@@ -93,12 +94,19 @@ function AnnotationCanvas (canvas, audioElement) {
 
 		if (this.recorder.recording){
 			this.recorder.startRecording()
-			this.audioManager.startRecordingAudio()
+
+			if (this.recordAudio)
+				this.audioManager.startRecordingAudio()
 
 			this.recorder.record({ type: this.eventTypes.brush, brush: JSON.parse(JSON.stringify(this.brush)) })
 		}else{
 			this.audioManager.stopRecordingAudio()
 		}
+	}
+	this.micToggle = function(){
+		this.recordAudio = !this.recordAudio
+		if (this.recordAudio)
+			this.audioManager.activateAudio()
 	}
 
 	// Draw up to a specific time by recursively running playEventRecursive
