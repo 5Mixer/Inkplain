@@ -1,7 +1,11 @@
 <template>
 	<div>
-		<annotation-canvas :bus="bus" :recording="recording" :micActive="micActive"></annotation-canvas>
-		<annotation-tools :recording="recording" @toggleMic="toggleMic" @toggleRec="toggleRec" @colourPick="changeColour" @clearCanvas="clearCanvas" @toolSelect="toolSelect" @brushWidth="brushWidth"></annotation-tools>
+		<div class="recordingSection left">
+			<annotation-canvas :bus="bus" :recording="recording" :micActive="micActive"></annotation-canvas>
+		</div>
+		<div class="recordingSection right">
+			<annotation-tools :recording="recording" @toggleMic="toggleMic" @toggleRec="toggleRec" @colourPick="changeColour" @clearCanvas="clearCanvas" @toolSelect="toolSelect" @brushWidth="brushWidth"></annotation-tools>
+		</div>
 	</div>
 </template>
 
@@ -57,5 +61,22 @@ annotation-canvas {
 	width: 100%;
 	height: 600px;
 	border: 2px solid black;
+}
+.recordingSection {
+	display: inline-block;
+	min-height: 100%;
+}
+.left {
+	float: left;
+	height: 50%;
+	display: block;
+	background: black;
+}
+.right {
+	width: 200px;
+	height: 100%;
+	display: inline-block;
+	vertical-align: top;
+
 }
 </style>

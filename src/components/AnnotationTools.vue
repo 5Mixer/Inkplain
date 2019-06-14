@@ -50,10 +50,9 @@ export default {
 
 <style scoped lang="scss">
 .tool-container {
-	background-color: #eee;
+	/* background-color: #eee; */
 	height: 100%;
 	border-radius: 3px;
-	margin-top: 1em;
 	padding-top: 10px;
 	padding-bottom: 10px;
 	text-align: center;
@@ -68,7 +67,6 @@ export default {
 
 	margin: 5px;
 	margin-top: 0;
-	margin-bottom: 0;
 	padding: 20px;
 	
 	width: 110px;
@@ -97,5 +95,6 @@ export default {
 	margin-top:0px;
 	position: relative;
 	top: -.5em;
+	width: 100%;
 }
 </style>

@@ -32,7 +32,7 @@ export default {
 
 	margin: 20px;
 	margin-top: 0;
-	margin-bottom: 0;
+	margin-bottom: 5px;
 	padding: 20px;
 	vertical-align: top;
 	

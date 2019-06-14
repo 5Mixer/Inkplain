@@ -30,7 +30,7 @@ function AnnotationCanvas (canvas, audioElement) {
 		const rect = canvas.getBoundingClientRect()
 		const events = e.getCoalescedEvents();
 		events.forEach((e) => {
-			let record = {type:this.eventTypes.move,coords:{x:Math.round((e.clientX - rect.left)/canvas.clientWidth*1920), y: Math.round((e.clientY - rect.top)/canvas.clientHeight*1080)}}
+			let record = {type:this.eventTypes.move,coords:{x:Math.round((e.clientX - rect.left)/canvas.clientWidth*1920/2), y: Math.round((e.clientY - rect.top)/canvas.clientHeight*1080/2)}}
 			this.recorder.record(record)
 			this.playRecord(record)
 		})
@@ -82,17 +82,14 @@ function AnnotationCanvas (canvas, audioElement) {
 
 	// Switch recording mode on/off
 	this.recToggle = function(){
-		this.recorder.recording = !this.recorder.recording
-		// document.getElementById('recBtn').innerText = recorder.recording ? "stop" : "rec"
 
 		this.renderer.clear()
-		// frameShowsUpToEvent = 0
 		this.brush = {
 			thickness: 2,
 			colour: "black"
 		}
 
-		if (this.recorder.recording){
+		if (!this.recorder.recording){
 			this.recorder.startRecording()
 
 			if (this.recordAudio)
@@ -101,6 +98,7 @@ function AnnotationCanvas (canvas, audioElement) {
 			this.recorder.record({ type: this.eventTypes.brush, brush: JSON.parse(JSON.stringify(this.brush)) })
 		}else{
 			this.audioManager.stopRecordingAudio()
+			this.recorder.stopRecording()
 		}
 	}
 	this.micToggle = function(){
@@ -157,8 +155,6 @@ function AnnotationCanvas (canvas, audioElement) {
 		}
 	}
 
-	// is a record of coords required?
-	//flag = false
 	this.drawframe = function() {
 		if (this.recorder.recording){
 
