@@ -1,13 +1,19 @@
 import {Recorder} from "@/video/record.js"
 import {Renderer} from "@/video/render.js"
 import {AudioManager} from "@/video/audio.js"
-function AnnotationCanvas (canvas, audioElement) {
+function AnnotationCanvas (canvas, audioElement, progressElement) {
 	this.brush = { thickness: 1, colour: "black" }
 	this.eventTypes = {
 		drawing: 1,
 		moving: 2,
 		brush: 3,
 		clear: 4
+	}
+	this.playback = {
+		time: 0,
+		lengthTime: 0,
+		progress: 0, 
+		playing: false
 	}
 	this.recordAudio = false
 
@@ -30,7 +36,7 @@ function AnnotationCanvas (canvas, audioElement) {
 		const rect = canvas.getBoundingClientRect()
 		const events = e.getCoalescedEvents();
 		events.forEach((e) => {
-			let record = {type:this.eventTypes.move,coords:{x:Math.round((e.clientX - rect.left)/canvas.clientWidth*1920/2), y: Math.round((e.clientY - rect.top)/canvas.clientHeight*1080/2)}}
+			let record = {type:this.eventTypes.move,coords:{x:Math.round((e.clientX - rect.left)/canvas.clientWidth*1920), y: Math.round((e.clientY - rect.top)/canvas.clientHeight*1080)}}
 			this.recorder.record(record)
 			this.playRecord(record)
 		})
@@ -99,12 +105,18 @@ function AnnotationCanvas (canvas, audioElement) {
 		}else{
 			this.audioManager.stopRecordingAudio()
 			this.recorder.stopRecording()
+			this.playback.lengthTime = this.recorder.recordingLength
 		}
 	}
 	this.micToggle = function(){
 		this.recordAudio = !this.recordAudio
 		if (this.recordAudio)
 			this.audioManager.activateAudio()
+	}
+	this.playToggle = function () {
+		this.playback.playing = !this.playback.playing
+		if (this.playback.playing && this.playback.progress == 1)
+			this.playback.time = 0
 	}
 
 	// Draw up to a specific time by recursively running playEventRecursive
@@ -157,13 +169,22 @@ function AnnotationCanvas (canvas, audioElement) {
 
 	this.drawframe = function() {
 		if (this.recorder.recording){
-
+			this.playback.time = 0
 		}else{
 			this.renderer.clear()
 			if (this.recorder.recordStore.length != 0){
-				this.playback(this.recorder.recordStore, audioElement.currentTime * 1000)
+				this.playback(this.recorder.recordStore, this.playback.time) //audioElement.currentTime * 1000)
 				this.renderer.drawPointer()
 			}
+			if (this.playback.playing && this.playback.time < this.playback.lengthTime)
+				this.playback.time += 1000/120
+			if (this.playback.time >= this.playback.lengthTime) {
+				this.playback.time = this.playback.lengthTime
+				this.playback.playing == false
+			}
+
+			this.playback.progress = this.playback.time / this.playback.lengthTime
+			progressElement.style.width = this.playback.progress * 100 + "%"
 		}
 		// requestAnimationFrame(this.drawframe)
 	}.bind(this)
