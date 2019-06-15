@@ -1,9 +1,8 @@
 <template>
-	<div class="boardContainer">
+	<div class="boardContainer" @mouseup="scrubbing = false">
 		<canvas ref="board"></canvas>
 
-			{{playback.progress}}
-		<div class="scrubber">
+		<div class="scrubber" @mousedown="scrubbing = true" @mousemove="handleScrub">
 			<span class="progress" ref="progress"></span>
 		</div>
 		<div class="media-button" @click="playToggle">{{playing ? '| |' : '►'}}</div>
@@ -25,6 +24,7 @@ export default {
 			playing: true,
 			playback: {},
 			progress: 0.,
+			scubbing: false,
 			canvas: undefined
 		}
 	}, props: ['bus', 'recording'],
@@ -32,13 +32,19 @@ export default {
 		playToggle: function () {
 			this.annotationLogic.playToggle()
 			this.playing = !this.playing
+		},
+		handleScrub: function (e) {
+			if (this.scrubbing) {
+				const rect = e.target.getBoundingClientRect()
+				this.annotationLogic.setPlayProgress((e.clientX - rect.left)/e.target.clientWidth)
+			}
 		}
 	},
 	mounted: function() {
 		this.context = this.$refs['board'].getContext('2d')
 
-		this.$refs['board'].width = 1920 //this.$refs['board'].parentElement.clientWidth //scale * 16;
-		this.$refs['board'].height = 1080 //this.$refs['board'].parentElement.clientHeight //scale * 9;
+		this.$refs['board'].width = 1920 //this.$refs['board'].parentElement.clientWidth 
+		this.$refs['board'].height = 1080 //this.$refs['board'].parentElement.clientHeight
 
 		this.annotationLogic = new AnnotationCanvas(this.$refs['board'], this.$refs['recordedAudio'], this.$refs['progress'])
 		this.recording = this.annotationLogic.recorder.recording
@@ -74,6 +80,7 @@ canvas {
 	padding: 2px;
 	padding-left: 10px;
 	padding-right: 10px;
+	width: 35px;
 	text-align: center;
 	cursor: pointer;
 }
@@ -82,12 +89,13 @@ canvas {
 	max-height: calc(100vh - 80px);
 }
 .scrubber {
-	height: 5px;
+	height: 1em;
 	background-color: #999;
 }
 .progress {
 	display:block;
-	height: 5px;
+	height: 100%;
+	pointer-events: none;
 	background: #444;
 }
 </style>

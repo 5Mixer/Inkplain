@@ -118,6 +118,9 @@ function AnnotationCanvas (canvas, audioElement, progressElement) {
 		if (this.playback.playing && this.playback.progress == 1)
 			this.playback.time = 0
 	}
+	this.setPlayProgress = function (progress) {
+		this.playback.time = this.playback.lengthTime * progress
+	}
 
 	// Draw up to a specific time by recursively running playEventRecursive
 	this.playback = function(records, upTo) {
