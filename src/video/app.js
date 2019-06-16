@@ -117,7 +117,11 @@ function AnnotationCanvas (canvas, audioElement, progressElement) {
 			if (this.recordAudio)
 				this.audioManager.startRecordingAudio()
 
-			this.recorder.record({ type: this.eventTypes.brush, brush: JSON.parse(JSON.stringify(this.brush)) })
+			// this.recorder.record({ type: this.eventTypes.brush, brush: JSON.parse(JSON.stringify(this.brush)) })
+			this.toolSelect("pen")
+			//dunno why it needs this, but without it, an initial colour change will fail in playback
+			this.brushColour(0)
+			this.brushColour(0)
 		}else{
 			this.playback.lengthTime = this.recorder.recordingLength
 			this.audioManager.stopRecordingAudio()
