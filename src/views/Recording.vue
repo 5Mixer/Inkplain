@@ -5,6 +5,7 @@
 		</div>
 		<div class="recordingSection right">
 			<annotation-tools :recording="recording" @toggleMic="toggleMic" @toggleRec="toggleRec" @colourPick="changeColour" @clearCanvas="clearCanvas" @toolSelect="toolSelect" @brushWidth="brushWidth"></annotation-tools>
+			<button @click="save">Save</button>
 		</div>
 	</div>
 </template>
@@ -47,6 +48,9 @@ export default {
 		},
 		brushWidth: function (width) {
 			bus.$emit("brushWidth", width)
+		},
+		save: function () {
+			bus.$emit("save")
 		}
 	}
 }

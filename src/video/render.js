@@ -48,8 +48,8 @@ function Renderer (canvas) {
 	}
 	this.drawPointer = function () {
 		this.ctx.beginPath();
-		this.ctx.lineWidth = 1
-		this.ctx.arc(this.currentPos.x, this.currentPos.y, 5, 0, 2 * Math.PI);
+		this.ctx.lineWidth = 2
+		this.ctx.arc(this.currentPos.x, this.currentPos.y, this.brush.thickness, 0, 2 * Math.PI);
 		this.ctx.stroke();
 	}
 

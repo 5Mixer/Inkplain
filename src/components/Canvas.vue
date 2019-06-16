@@ -5,7 +5,7 @@
 		<div class="scrubber" @mousedown="scrubbing = true" @mousemove="handleScrub">
 			<span class="progress" ref="progress"></span>
 		</div>
-		<div class="media-button" @click="playToggle">{{playing ? '| |' : '►'}}</div>
+		<div class="media-button" @click="playToggle">{{playing ? '►' : '| |' }}</div>
 
 		<div v-show="!recording && initialRecord">
 		
@@ -52,9 +52,10 @@ export default {
 		this.bus.$on('recToggle', () => { this.annotationLogic.recToggle(); this.initalRecord = true } )
 		this.bus.$on('micToggle', () => { this.annotationLogic.micToggle() } )
 		this.bus.$on('toolSelect', (tool) => { this.annotationLogic.toolSelect(tool) })
-		this.bus.$on('colourPick', (colour) => { this.annotationLogic.brushColour(colour) })
+		this.bus.$on('colourPick', (colour) => { this.annotationLogic.brushColourWithLookup(colour) })
 		this.bus.$on('clearCanvas', () => { this.annotationLogic.clearCanvas() } )
 		this.bus.$on('brushWidth', (width) => { this.annotationLogic.brushWidth(width) })
+		this.bus.$on('save', () => { this.annotationLogic.save() })
 	}
 }
 </script>

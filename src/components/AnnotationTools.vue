@@ -10,7 +10,7 @@
 
 		<colour-picker @colourPick="colourPick"></colour-picker>
 		<span class="tool-button">
-			<input type="range" min="1" max="30" value="2" class="thicknessSlider" v-on:input="brushWidth(this.value)">
+			<input type="range" min="1" max="30" value="2" class="thicknessSlider" v-on:input="brushWidth">
 		</span>
 	</div>
 </template>
@@ -40,10 +40,9 @@ export default {
 		clearCanvas: function () {
 			this.$emit("clearCanvas")
 		},
-		brushWidth: function (width) {
-			console.log("spook")
-			this.$emit("brushWidth", width)
-		}.bind(this)
+		brushWidth: function (e) {
+			this.$emit("brushWidth", e.target.value)
+		}
 	}
 }
 </script>
