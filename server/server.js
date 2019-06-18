@@ -14,7 +14,7 @@ app.use(express.json());
 
 app.get('/video/:id', (req, res) => {
 	if (videos[req.params.id] != undefined) {
-		res.send(videos[req.params.id])
+		res.json(videos[req.params.id])
 	} else {
 		res.send("no video there")
 	}

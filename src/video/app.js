@@ -160,7 +160,14 @@ function AnnotationCanvas (canvas, audioElement, progressElement) {
 			lengthTime: this.playback.lengthTime,
 			eventData: new Uint16Array(this.recorder.recordStore)
 		}
-		axios.post('http://localhost:3000/video', JSON.stringify(video))
+		axios.post('http://localhost:3000/video', (video))
+	}
+	this.load = function (data) {
+		this.recorder.recordStore = (data.eventData)
+		this.playback.lengthTime = data.lengthTime
+		this.recorder.recordingLength = data.lengthTime
+		this.playback.time = 0
+		this.recorder.recording = false
 	}
 
 	// Draw up to a specific time by recursively running playEventRecursive
@@ -173,7 +180,7 @@ function AnnotationCanvas (canvas, audioElement, progressElement) {
 		// Stop recursively replaying events if this event is after where replaying should stop
 
 		let parsedRecord = {}
-		var offset = 0
+		let offset = 0
 		switch (records[i]) {
 			case this.eventTypes.moving: {
 				parsedRecord.type = this.eventTypes.moving
@@ -221,10 +228,10 @@ function AnnotationCanvas (canvas, audioElement, progressElement) {
 
 		if (parsedRecord.time > upTo)
 			return
-
+		
 		this.playRecord(parsedRecord)
 
-		if (i < records.length - 2){
+		if (i < Object.keys(records).length - 2){
 			this.playEventRecursive(records,i + offset, upTo)
 		}
 	}.bind(this)

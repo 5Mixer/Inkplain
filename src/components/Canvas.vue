@@ -56,6 +56,7 @@ export default {
 		this.bus.$on('clearCanvas', () => { this.annotationLogic.clearCanvas() } )
 		this.bus.$on('brushWidth', (width) => { this.annotationLogic.brushWidth(width) })
 		this.bus.$on('save', () => { this.annotationLogic.save() })
+		this.bus.$on('load', (data) => { this.annotationLogic.load(data) })
 	}
 }
 </script>
