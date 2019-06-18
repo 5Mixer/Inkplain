@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home.vue'
 import Recording from './views/Recording.vue'
+import Videos from './views/Videos.vue'
 import Playback from './views/Playback.vue'
 
 Vue.use(Router)
@@ -19,6 +20,11 @@ export default new Router({
 		path: '/rec',
 		name: 'recording',
 		component: Recording
+	},
+	{
+		path: '/play/',
+		name: 'videos',
+		component: Videos
 	},
 	{
 		path: '/play/:id',

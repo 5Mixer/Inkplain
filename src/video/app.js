@@ -158,9 +158,11 @@ function AnnotationCanvas (canvas, audioElement, progressElement) {
 		let video = {
 			title: 'no title',
 			lengthTime: this.playback.lengthTime,
-			eventData: new Uint16Array(this.recorder.recordStore)
+			eventData: this.recorder.recordStore
 		}
-		axios.post('http://localhost:3000/video', (video))
+		axios.post('http://localhost:3000/video', (video)).then(function (response){
+			alert("Video avaliable at "+response.data)
+		})
 	}
 	this.load = function (data) {
 		this.recorder.recordStore = (data.eventData)
@@ -230,7 +232,7 @@ function AnnotationCanvas (canvas, audioElement, progressElement) {
 			return
 		
 		this.playRecord(parsedRecord)
-
+		// TODO: This shouldn't have to be converted to an array
 		if (i < Object.keys(records).length - 2){
 			this.playEventRecursive(records,i + offset, upTo)
 		}

@@ -19,6 +19,9 @@ app.get('/video/:id', (req, res) => {
 		res.send("no video there")
 	}
 })
+app.get('/listing/', (req, res) => {
+	res.json(Object.keys(videos))
+})
 app.post('/video/', function (req, res) {
 	// bit of a strange id generation algorithm
 	var id = ((1111111+Math.floor(Math.random() * 8888888))+"").split("").map(a => { return 'bcdghnjkxyz'.split("")[a]}).join("")

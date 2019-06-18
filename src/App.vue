@@ -1,9 +1,9 @@
 <template>
   <div id="app">
     <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link> | 
-      <router-link to="/rec">Record</router-link>
+      <router-link to="/">Home</router-link>
+      <router-link to="/about">About</router-link> 
+      <router-link to="/rec">Record</router-link> 
       <router-link to="/play">Videos</router-link>
     </div>
     <router-view/>
@@ -11,4 +11,9 @@
 </template>
 
 <style lang="scss">
+a {
+	padding: .2em;
+	background-color: #eee;
+	margin: .3em;
+}
 </style>
