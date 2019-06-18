@@ -1,6 +1,7 @@
 import {Recorder} from "@/video/record.js"
 import {Renderer} from "@/video/render.js"
 import {AudioManager} from "@/video/audio.js"
+const axios = require('axios')
 function AnnotationCanvas (canvas, audioElement, progressElement) {
 	this.colours = {
 		black: 0,
@@ -159,8 +160,7 @@ function AnnotationCanvas (canvas, audioElement, progressElement) {
 			lengthTime: this.playback.lengthTime,
 			eventData: new Uint16Array(this.recorder.recordStore)
 		}
-		console.log(video)
-		console.log(JSON.stringify(video).length)
+		axios.post('http://localhost:3000/video', JSON.stringify(video))
 	}
 
 	// Draw up to a specific time by recursively running playEventRecursive
