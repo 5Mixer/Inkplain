@@ -47,7 +47,7 @@ function AnnotationCanvas (canvas, audioElement, progressElement) {
 			this.playRecord(record)
 		})
 	}.bind(this));
-	
+
 	canvas.addEventListener("pointerdown", function (e) {
 		this.recordDrawEvent(true)
 	}.bind(this));
@@ -76,6 +76,18 @@ function AnnotationCanvas (canvas, audioElement, progressElement) {
 		this.recorder.record(record)
 	}
 	this.clearCanvas = function() {
+		var newCanvas = document.createElement('canvas');
+		// document.body.appendChild(newCanvas)
+		var context = newCanvas.getContext('2d');
+
+		//set dimensions
+		newCanvas.width = canvas.width;
+		newCanvas.height = canvas.height;
+
+		//apply the old canvas to the new one
+		context.drawImage(canvas, 0, 0);
+		console.log(newCanvas)
+
 		let record = {type: this.eventTypes.clear}
 		this.playRecord(record)
 		this.recorder.record(record)
@@ -120,7 +132,7 @@ function AnnotationCanvas (canvas, audioElement, progressElement) {
 			// this.recorder.record({ type: this.eventTypes.brush, brush: JSON.parse(JSON.stringify(this.brush)) })
 			this.toolSelect("pen")
 			//dunno why it needs this, but without it, an initial colour change will fail in playback
-			this.brushColour(0)
+
 			this.brushColour(0)
 		}else{
 			this.playback.lengthTime = this.recorder.recordingLength
@@ -145,7 +157,7 @@ function AnnotationCanvas (canvas, audioElement, progressElement) {
 		let video = {
 			title: 'no title',
 			lengthTime: this.playback.lengthTime,
-			eventData: this.recorder.recordStore
+			eventData: new Uint16Array(this.recorder.recordStore)
 		}
 		console.log(video)
 		console.log(JSON.stringify(video).length)
@@ -155,10 +167,11 @@ function AnnotationCanvas (canvas, audioElement, progressElement) {
 	this.renderVideo = function(records, upTo) {
 		this.renderer.clear()
 		this.playEventRecursive(records,0, upTo)
+		this.renderer.penUp()
 	}
 	this.playEventRecursive = function(records,i,upTo) {
 		// Stop recursively replaying events if this event is after where replaying should stop
-			
+
 		let parsedRecord = {}
 		var offset = 0
 		switch (records[i]) {
@@ -217,33 +230,23 @@ function AnnotationCanvas (canvas, audioElement, progressElement) {
 	}.bind(this)
 	this.playRecord = function(record) {
 		if (record.type == this.eventTypes.moving){
-			// set previous coords based on current, and load current from event
-			this.renderer.previousPos.x = this.renderer.currentPos.x
-			this.renderer.previousPos.y = this.renderer.currentPos.y
-			this.renderer.currentPos.x = record.coords.x
-			this.renderer.currentPos.y = record.coords.y
-			// If this move event occurs right after the pen has just been pushed down, move prev point to current.
-			if (this.renderer.startedDrawing){
-				// unset flag
-				this.renderer.startedDrawing = false
-				this.renderer.previousPos.x = this.renderer.currentPos.x
-				this.renderer.previousPos.y = this.renderer.currentPos.y
-			}
-			// A move event may or may not occur with the pen down (ie. mouse may be moving, but not drawing)
-			if (this.renderer.down)
+			this.renderer.move(record.coords.x, record.coords.y)
+
+			// While in recording mode, operations must be drawn as they are applied, as it works by
+			// not clearing on a frame by frame basis. As such, draw should be could to draw a line in rec. mode.
+			if (this.renderer.down && this.recorder.recording)
 				this.renderer.draw()
 		}
 		if (record.type == this.eventTypes.down){
-			// flag = true
-			this.renderer.down = true
-			this.renderer.startedDrawing = true
+			this.renderer.penDown()
 		}
 		if (record.type == this.eventTypes.up) {
-			this.renderer.down = false
+			this.renderer.penUp()
 		}
 		if (record.type == this.eventTypes.brush){
 			this.renderer.brush = record.brush
 			this.renderer.brush.colour = this.colourLUT[record.brush.colour]
+			this.renderer.brushLoad()
 		}
 		if (record.type == this.eventTypes.clear){
 			this.renderer.clear()
