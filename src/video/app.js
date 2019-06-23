@@ -178,38 +178,43 @@ function AnnotationCanvas (canvas, audioElement, progressElement) {
 		this.playEventRecursive(records,0, upTo)
 		this.renderer.penUp()
 	}
+	
+	let offset = 0
 	this.playEventRecursive = function(records,i,upTo) {
 		// Stop recursively replaying events if this event is after where replaying should stop
+		if (records[i+1] > upTo)
+			return
 
-		let parsedRecord = {}
-		let offset = 0
+		// let parsedRecord = {}
 		switch (records[i]) {
 			case this.eventTypes.moving: {
-				parsedRecord.type = this.eventTypes.moving
-				parsedRecord.time = records[i + 1]
-				parsedRecord.coords = { x: records[i + 2], y: records[i + 3] }
+				// parsedRecord.type = this.eventTypes.moving
+				// parsedRecord.coords = { x: records[i + 2], y: records[i + 3] }
 				offset = 4
+				this.renderer.move(records[i + 2], records[i + 3])
 				break
 			}
 			case this.eventTypes.clear: {
-				parsedRecord.type = this.eventTypes.clear
-				parsedRecord.time = records[i + 1]
+				this.renderer.clear()
 				offset = 2
 				break
 			}
 			case this.eventTypes.up: {
-				parsedRecord.type = this.eventTypes.up
-				parsedRecord.time = records[i + 1]
+				// parsedRecord.type = this.eventTypes.up
+				// parsedRecord.time = records[i + 1]
 				offset = 2
+				this.renderer.penUp()
 				break
 			}
 			case this.eventTypes.down: {
-				parsedRecord.type = this.eventTypes.down
-				parsedRecord.time = records[i + 1]
+				// parsedRecord.type = this.eventTypes.down
+				// parsedRecord.time = records[i + 1]
 				offset = 2
+				this.renderer.penDown()
 				break
 			}
 			case this.eventTypes.brush: {
+				let parsedRecord = {}
 				parsedRecord.type = this.eventTypes.brush
 				parsedRecord.time = records[i + 1]
 
@@ -219,6 +224,7 @@ function AnnotationCanvas (canvas, audioElement, progressElement) {
 				recordbrush.thickness = records[i + 3]
 				parsedRecord.brush = JSON.parse(JSON.stringify(recordbrush))
 				offset = 4
+				this.playRecord(parsedRecord)
 				break
 			}
 			default: {
@@ -228,12 +234,9 @@ function AnnotationCanvas (canvas, audioElement, progressElement) {
 		}
 
 
-		if (parsedRecord.time > upTo)
-			return
-		
-		this.playRecord(parsedRecord)
+	
 		// TODO: This shouldn't have to be converted to an array
-		if (i < Object.keys(records).length - 2){
+		if (i < records.length - 2){
 			this.playEventRecursive(records,i + offset, upTo)
 		}
 	}.bind(this)
