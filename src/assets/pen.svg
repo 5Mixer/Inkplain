@@ -25,9 +25,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="3.959798"
-     inkscape:cx="73.994506"
-     inkscape:cy="28.225807"
+     inkscape:zoom="22.4"
+     inkscape:cx="19.985202"
+     inkscape:cy="16.657913"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -48,7 +48,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -66,20 +66,19 @@
        sodipodi:nodetypes="ccccc" />
     <path
        style="fill:#1a1a1a;stroke:none;stroke-width:0;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
-       d="m 16.75,281.58928 -10,-5 10,-5 z"
-       id="path26-0"
-       inkscape:connector-curvature="0"
-       sodipodi:nodetypes="cccc" />
+       d="M 37.794922 0 L 11.337891 13.228516 L 11.337891 24.566406 L 37.794922 37.794922 L 37.794922 0 z "
+       transform="matrix(0.26458333,0,0,0.26458333,6.75,271.58928)"
+       id="path26-0" />
     <path
-       style="fill:#a02c2c;stroke:none;stroke-width:0;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
+       style="fill:#808080;stroke:none;stroke-width:0;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
        d="m 9.75,278.08928 -3,-1.5 3,-1.5 z"
-       id="path26-0-9"
+       id="penEnd"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cccc" />
     <path
-       style="fill:none;stroke:#a02c2c;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:none;stroke:#808080;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="m 17.75,276.58927 h 38"
-       id="path5850"
+       id="penLine"
        inkscape:connector-curvature="0" />
   </g>
 </svg>

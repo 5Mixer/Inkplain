@@ -5,7 +5,7 @@
 		</div>
 		<div class="recordingSection right">
 			<annotation-tools :recording="recording" @toggleMic="toggleMic" @toggleRec="toggleRec" @colourPick="changeColour" @clearCanvas="clearCanvas" @toolSelect="toolSelect" @brushWidth="brushWidth"></annotation-tools>
-			<button @click="save">Save</button>
+			<button class="tool-button" @click="save">Publish</button>
 		</div>
 	</div>
 </template>
@@ -60,6 +60,27 @@ export default {
 annotation-tools {
 	height: 90px;
 }
+.tool-button {
+	display: block;
+	cursor: pointer;
+
+	background-color: white;
+	text-align: center;
+
+	margin: 5px;
+	margin-top: 0;
+	padding: 20px;
+	
+	line-height: calc(10px - .5em);
+
+	font-size: 1em;
+	border: 1px solid gray;
+
+	-webkit-user-select: none; /* Safari */
+	-moz-user-select: none; /* Firefox */
+	-ms-user-select: none; /* IE10+/Edge */
+	user-select: none; /* Standard */
+}
 
 annotation-canvas {
 	width: 100%;
@@ -71,13 +92,15 @@ annotation-canvas {
 	min-height: 100%;
 }
 .left {
+	margin-left: 5px;
 	float: left;
 	height: 50%;
 	display: block;
 	background: black;
 }
 .right {
-	width: 200px;
+	width: 10vw;
+	min-width: 150px;
 	height: 100%;
 	display: inline-block;
 	vertical-align: top;

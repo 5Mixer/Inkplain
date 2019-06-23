@@ -49,10 +49,9 @@ function Renderer (canvas) {
 		}
 
 	}
-	this.penUp = function () { this.down = false
-
-		// this.ctx.closePath()
-			this.ctx.stroke()
+	this.penUp = function () { 
+		this.down = false
+		this.ctx.stroke()
 	}
 	this.penDown = function () { this.down = true; 
 		this.ctx.beginPath()

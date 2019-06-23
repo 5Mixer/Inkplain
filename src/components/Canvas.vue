@@ -1,15 +1,15 @@
 <template>
-	<div class="boardContainer" @mouseup="scrubbing = false">
+	<div class="boardContainer" @mouseup="scrubbing = false" @mousemove="handleScrub">
 		<canvas ref="board"></canvas>
 
-		<div class="scrubber" @mousedown="scrubbing = true" @mousemove="handleScrub">
-			<span class="progress" ref="progress"></span>
-		</div>
-		<div class="media-button" @click="playToggle">{{playing ? '►' : '| |' }}</div>
-
 		<div v-show="!recording && initialRecord">
-		
-			<audio src="" ref="recordedAudio" controls class="slider" v-show="!recording && initialRecord"></audio>
+
+			<div class="scrubber" @mousedown="scrubbing = true; handleScrub($event)">
+				<span class="progress" ref="progress"></span>
+			</div>
+			<div class="media-button" @click="playToggle">{{playing ? '►' : '| |' }}</div>
+
+			<audio src="" ref="recordedAudio" controls class="slider" v-show="false"></audio>
 		</div>
 	</div>
 </template>
@@ -49,7 +49,7 @@ export default {
 		this.annotationLogic = new AnnotationCanvas(this.$refs['board'], this.$refs['recordedAudio'], this.$refs['progress'])
 		this.recording = this.annotationLogic.recorder.recording
 
-		this.bus.$on('recToggle', () => { this.annotationLogic.recToggle(); this.initalRecord = true } )
+		this.bus.$on('recToggle', () => { this.initialRecord = true; this.annotationLogic.recToggle(); } )
 		this.bus.$on('micToggle', () => { this.annotationLogic.micToggle() } )
 		this.bus.$on('toolSelect', (tool) => { this.annotationLogic.toolSelect(tool) })
 		this.bus.$on('colourPick', (colour) => { this.annotationLogic.brushColourWithLookup(colour) })
@@ -57,6 +57,7 @@ export default {
 		this.bus.$on('brushWidth', (width) => { this.annotationLogic.brushWidth(width) })
 		this.bus.$on('save', () => { this.annotationLogic.save() })
 		this.bus.$on('load', (data) => { this.annotationLogic.load(data) })
+		this.bus.$on('enablePlayback', () => {this.initialRecord = true})
 	}
 }
 </script>
@@ -87,7 +88,7 @@ canvas {
 	cursor: pointer;
 }
 .boardContainer {
-	height: calc(56.25vw - 15vw);
+	height: calc(56.25vw - 10vw);
 	max-height: calc(100vh - 80px);
 }
 .scrubber {
@@ -99,5 +100,6 @@ canvas {
 	height: 100%;
 	pointer-events: none;
 	background: #444;
+	border-right: solid 6px #c3dff7;
 }
 </style>

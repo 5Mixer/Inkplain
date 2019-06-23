@@ -7,8 +7,9 @@ function AnnotationCanvas (canvas, audioElement, progressElement) {
 		black: 0,
 		white: 1
 	}
-	this.colourLUT = [ 'black', 'white', "#92E285", "#63BBEE", "#F09E6F", "#DC85E9", "#F5CE53", "#333333"]
-	this.brush = { thickness: 2, colour: this.colours.black }
+	this.colourLUT = [ 'black', 'white', "#333333","#63BBEE", "#92E285", "#ef5656", "#F09E6F", "#DC85E9", "#F5CE53", "#a07b86" ]
+
+this.brush = { thickness: 2, colour: this.colours.black }
 	this.eventTypes = {
 		clear: 1,
 		down: 2,
@@ -51,6 +52,11 @@ function AnnotationCanvas (canvas, audioElement, progressElement) {
 
 	canvas.addEventListener("pointerdown", function (e) {
 		this.recordDrawEvent(true)
+		const rect = canvas.getBoundingClientRect()
+		
+		let record = {type:this.eventTypes.moving,coords:{x:Math.round((e.clientX - rect.left)/canvas.clientWidth*1920), y: Math.round((e.clientY - rect.top)/canvas.clientHeight*1080)}}
+		this.recorder.record(record)
+		this.playRecord(record)
 	}.bind(this));
 	canvas.addEventListener("pointerup", function (e) {
 		this.recordDrawEvent(false)
@@ -106,8 +112,8 @@ function AnnotationCanvas (canvas, audioElement, progressElement) {
 		}
 		if (tool == "pen") {
 			toolBrush.opacity = 1
-			toolBrush.colour = this.colours.black
-			toolBrush.thickness = 2
+			toolBrush.colour = this.brush.colour //this.colours.black
+			// toolBrush.thickness = 2
 		}
 		let record = {type:this.eventTypes.brush,brush:JSON.parse(JSON.stringify(toolBrush))}
 		this.recorder.record(JSON.parse(JSON.stringify(record)))
@@ -118,11 +124,6 @@ function AnnotationCanvas (canvas, audioElement, progressElement) {
 	this.recToggle = function(){
 
 		this.renderer.clear()
-		this.brush = {
-			thickness: 2,
-			opacity: 1,
-			colour: this.colours.black
-		}
 
 		if (!this.recorder.recording){
 			this.recorder.startRecording()
@@ -131,10 +132,9 @@ function AnnotationCanvas (canvas, audioElement, progressElement) {
 				this.audioManager.startRecordingAudio()
 
 			// this.recorder.record({ type: this.eventTypes.brush, brush: JSON.parse(JSON.stringify(this.brush)) })
-			this.toolSelect("pen")
-			//dunno why it needs this, but without it, an initial colour change will fail in playback
-
-			this.brushColour(0)
+			let record = {type:this.eventTypes.brush,brush:JSON.parse(JSON.stringify(this.brush))}
+			this.recorder.record(JSON.parse(JSON.stringify(record)))
+			this.playRecord(record)
 		}else{
 			this.playback.lengthTime = this.recorder.recordingLength
 			this.audioManager.stopRecordingAudio()
@@ -256,7 +256,7 @@ function AnnotationCanvas (canvas, audioElement, progressElement) {
 			this.renderer.penUp()
 		}
 		if (record.type == this.eventTypes.brush){
-			this.renderer.brush = record.brush
+			this.renderer.brush = JSON.parse(JSON.stringify(record.brush))
 			this.renderer.brush.colour = this.colourLUT[record.brush.colour]
 			this.renderer.brushLoad()
 		}

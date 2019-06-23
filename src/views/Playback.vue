@@ -29,6 +29,7 @@ export default {
 		console.log(this.$route.params.id)
 		axios.get(`http://localhost:3000/video/${this.$route.params.id}`).then(function(response) {
 			bus.$emit('load', response.data)
+			bus.$emit('enablePlayback')
 		})
 	
 	}
@@ -36,16 +37,13 @@ export default {
 </script>
 
 <style scoped>
-annotation-tools {
-	height: 90px;
-}
-
 annotation-canvas {
 	width: 100%;
 	height: 600px;
 	border: 2px solid black;
 }
 .recordingSection {
+	margin-left: 5px;
 	display: inline-block;
 	min-height: 100%;
 }

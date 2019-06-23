@@ -31,10 +31,11 @@ function Recorder(){
 		4 : [ 'time', 'x', 'y'],
 		5 : [ 'time', 'colour', 'width']
 	}
+	this.maxEventSize = Math.pow(4,64)
 	this.encodeEvent = function (eventType, ...eventProps) {
 		if (this.eventTypes[eventType].length == eventProps.length) {
 			for (var i = 0; i < eventProps.length; i++){
-				if ((eventProps[i]) > Math.pow(4, 64)){
+				if ((eventProps[i]) > this.maxEventSize){
 					throw(`Tried to store data greater than 4 bytes (value ${eventProps[i]}) in event ${eventType}`)
 				}
 			}
@@ -72,7 +73,6 @@ function Recorder(){
 					break
 				}
 				case this.eventType.brush: {
-					console.log(event)
 					this.encodeEvent(event.type, event.time, event.brush.colour, event.brush.thickness)
 					break
 				}
