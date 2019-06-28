@@ -6,6 +6,7 @@ function Renderer (canvas) {
 	this.currentPos = { x: 0, y: 0}
 	this.previousPos = { x: 0, y: 0}
 	this.down = false
+	this.inCanvas = false // Should the pointer be shown?
 
 	this.brush = {
 		thickness: 2,
@@ -29,8 +30,11 @@ function Renderer (canvas) {
 		this.currentPos = { x: 0, y: 0}
 		this.previousPos = { x: 0, y: 0}
 		this.down = false
+		this.inCanvas = false
 		this.startedDrawing = false // true means point is a start point - should not have a prev.
 	}
+	this.clear()
+
 	this.move = function (x,y) {
 		this.previousPos.x = this.currentPos.x
 		this.previousPos.y = this.currentPos.y
@@ -53,12 +57,19 @@ function Renderer (canvas) {
 		this.down = false
 		this.ctx.stroke()
 	}
-	this.penDown = function () { this.down = true; 
+	this.penDown = function () {
+		this.down = true; 
 		this.ctx.beginPath()
 		this.startedDrawing = true
 	}
+	
+	this.penEnter = function () { 
+		this.inCanvas = true
+	}
+	this.penLeave = function () { 
+		this.inCanvas = false
+	}
 
-	this.clear()
 	this.draw = function() {
 		this.ctx.beginPath()
 
@@ -69,16 +80,17 @@ function Renderer (canvas) {
 		this.ctx.stroke()
 	}
 	this.drawPointer = function () {
-		this.ctx.beginPath();
-		this.ctx.lineWidth = 2
-		this.ctx.arc(this.currentPos.x, this.currentPos.y, this.brush.thickness, 0, 2 * Math.PI);
-		this.ctx.stroke();
+		if (this.inCanvas) {
+			this.ctx.beginPath();
+			this.ctx.lineWidth = 2
+			this.ctx.arc(this.currentPos.x, this.currentPos.y, this.brush.thickness, 0, 2 * Math.PI);
+			this.ctx.stroke();
+		}
 	}
 	this.brushLoad = function () {
 		this.ctx.lineWidth = this.brush.thickness
 		this.ctx.strokeStyle = this.brush.colour
 	}
-
 
 	return this
 }

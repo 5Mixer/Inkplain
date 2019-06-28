@@ -9,13 +9,16 @@ function AnnotationCanvas (canvas, audioElement, progressElement) {
 	}
 	this.colourLUT = [ 'black', 'white', "#333333","#63BBEE", "#92E285", "#ef5656", "#F09E6F", "#DC85E9", "#F5CE53", "#a07b86" ]
 
-this.brush = { thickness: 2, colour: this.colours.black }
+	this.brush = { thickness: 2, colour: this.colours.black }
+	this.inCanvas = false
 	this.eventTypes = {
 		clear: 1,
 		down: 2,
 		up: 3,
 		moving: 4,
-		brush: 5
+		brush: 5,
+		enter: 6,
+		leave: 7
 	}
 	this.playback = {
 		time: 0,
@@ -63,6 +66,12 @@ this.brush = { thickness: 2, colour: this.colours.black }
 	}.bind(this));
 	canvas.addEventListener("mouseout", function (e) {
 		this.recordDrawEvent(false)
+		
+		this.recorder.record({ type: this.eventTypes.leave})
+	}.bind(this));
+	canvas.addEventListener("mouseenter", function (e) {
+		
+		this.recorder.record({ type: this.eventTypes.enter})
 	}.bind(this));
 
 	// Button / brush handlers
@@ -176,7 +185,6 @@ this.brush = { thickness: 2, colour: this.colours.black }
 	this.renderVideo = function(records, upTo) {
 		this.renderer.clear()
 		this.playEventRecursive(records,0, upTo)
-		this.renderer.penUp()
 	}
 	
 	let offset = 0
@@ -227,13 +235,21 @@ this.brush = { thickness: 2, colour: this.colours.black }
 				this.playRecord(parsedRecord)
 				break
 			}
+			case this.eventTypes.enter: {
+				this.renderer.penEnter()
+				offset = 2;
+				break;
+			}
+			case this.eventTypes.leave: {
+				this.renderer.penLeave()
+				offset = 2;
+				break;
+			}
 			default: {
 				offset = 1
 				break
 			}
 		}
-
-
 	
 		// TODO: This shouldn't have to be converted to an array
 		if (i < records.length - 2){

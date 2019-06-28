@@ -15,7 +15,9 @@ function Recorder(){
 		down: 2,
 		up: 3,
 		move : 4,
-		brush: 5
+		brush: 5,
+		enter: 6,
+		leave: 7
 	}
 
 	// type: UInt8 (1 byte)
@@ -28,8 +30,10 @@ function Recorder(){
 		1 : [ 'time' ],
 		2 : [ 'time' ],
 		3 : [ 'time' ],
-		4 : [ 'time', 'x', 'y'],
-		5 : [ 'time', 'colour', 'width']
+		4 : [ 'time', 'x', 'y' ],
+		5 : [ 'time', 'colour', 'width' ],
+		6 : [ 'time' ],
+		7 : [ 'time' ]
 	}
 	this.maxEventSize = Math.pow(4,64)
 	this.encodeEvent = function (eventType, ...eventProps) {
@@ -74,6 +78,14 @@ function Recorder(){
 				}
 				case this.eventType.brush: {
 					this.encodeEvent(event.type, event.time, event.brush.colour, event.brush.thickness)
+					break
+				}
+				case this.eventType.enter: {
+					this.encodeEvent(event.type, event.time)
+					break
+				}
+				case this.eventType.leave: {
+					this.encodeEvent(event.type, event.time)
 					break
 				}
 				default: {
