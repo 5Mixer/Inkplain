@@ -66,6 +66,9 @@ export default {
 		this.$refs['board'].height = 1080 //this.$refs['board'].parentElement.clientHeight
 
 		this.annotationLogic = new AnnotationCanvas(this.$refs['board'], this.$refs['recordedAudio'], this.$refs['progress'])
+		this.annotationLogic.exportVideo = function (video) {
+			this.bus.$emit('save', video)
+		}.bind(this)
 		this.recording = this.annotationLogic.recorder.recording
 
 		this.bus.$on('recToggle', () => { this.initialRecord = true; this.annotationLogic.recToggle(); } )

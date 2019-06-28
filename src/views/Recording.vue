@@ -27,6 +27,7 @@
 <script>
 import AnnotationTools from '@/components/AnnotationTools.vue'
 import AnnotationCanvas from '@/components/Canvas.vue'
+const axios = require('axios')
 import Vue from 'vue'
 const bus = new Vue()
 
@@ -75,6 +76,14 @@ export default {
 		save: function () {
 			bus.$emit("save", this.title, this.description)
 		}
+	},
+	mounted: function () {
+		bus.$on("save", function (video) {
+			axios.post('http://localhost:3000/video', (video)).then(function (response){
+				this.router.push({ name: 'play', params: { id: video.id} })
+
+			})
+		})
 	}
 }
 </script>

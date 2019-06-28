@@ -10,7 +10,7 @@ function AnnotationCanvas (canvas, audioElement, progressElement) {
 	}
 	this.colourLUT = [ 'black', 'white', "#333333","#63BBEE", "#92E285", "#ef5656", "#F09E6F", "#DC85E9", "#F5CE53", "#a07b86" ]
 
-	this.brush = { thickness: 2, colour: this.colours.black }
+	this.brush = { thickness: 2, colour: this.colours.black, opacity: 1 }
 	this.storedInkColour = this.colours.black // Store ink colour for instance between uses of the eraser
 	this.inCanvas = false
 	this.eventTypes = {
@@ -102,18 +102,18 @@ function AnnotationCanvas (canvas, audioElement, progressElement) {
 			this.brush.colour = this.colours.white
 			this.brush.thickness = 40
 			// toolBrush.thickness = 40
-			// toolBrush.opacity = 1
+			this.brush.opacity = 1
 		}
 		if (tool == "highlighter") {
 			this.brush.colour = this.storedInkColour
 			this.brush.thickness = 15
-			// toolBrush.opacity = .7
+			this.brush.opacity = .4
 			// toolBrush.thickness = 15
 		}
 		if (tool == "pen") {
 			this.brush.colour = this.storedInkColour
 			this.brush.thickness = 2
-			// toolBrush.opacity = 1
+			this.brush.opacity = 1
 			// toolBrush.colour = this.brush.colour //this.colours.black
 			// toolBrush.thickness = 2
 		}
@@ -135,9 +135,9 @@ function AnnotationCanvas (canvas, audioElement, progressElement) {
 	// Switch recording mode on/off
 	this.recToggle = function(){
 
-		this.renderer.clear()
 
 		if (!this.recorder.recording){
+			this.renderer.clear()
 			this.recorder.startRecording()
 			this.storedInkColour = this.brush.colour
 
@@ -174,10 +174,10 @@ function AnnotationCanvas (canvas, audioElement, progressElement) {
 			lengthTime: this.playback.lengthTime,
 			eventData: this.recorder.recordStore
 		}
-		axios.post('http://localhost:3000/video', (video)).then(function (response){
-			console.log("Video avaliable at "+response.data)
-		})
+		this.exportVideo(video)
 	}
+	this.exportVideo = new function (video) {}
+
 	this.load = function (data) {
 		this.recorder.recordStore = (data.eventData)
 		this.playback.lengthTime = data.lengthTime
@@ -224,11 +224,12 @@ function AnnotationCanvas (canvas, audioElement, progressElement) {
 				let recordbrush = {}
 				recordbrush.colour = records[i + 2]
 				recordbrush.thickness = records[i + 3]
+				recordbrush.opacity = records[i + 4]
 				this.renderer.brush = JSON.parse(JSON.stringify(recordbrush))
 				this.renderer.brush.colour = this.colourLUT[recordbrush.colour]
 				this.renderer.brushLoad()
 				// parsedRecord.brush = JSON.parse(JSON.stringify(recordbrush))
-				offset = 4
+				offset = 5
 				// this.playRecord(parsedRecord)
 				break
 			}

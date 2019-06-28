@@ -31,7 +31,7 @@ function Recorder(){
 		2 : [ 'time' ],
 		3 : [ 'time' ],
 		4 : [ 'time', 'x', 'y' ],
-		5 : [ 'time', 'colour', 'width' ],
+		5 : [ 'time', 'colour', 'width', 'opacity' ],
 		6 : [ 'time' ],
 		7 : [ 'time' ]
 	}
@@ -77,7 +77,7 @@ function Recorder(){
 					break
 				}
 				case this.eventType.brush: {
-					this.encodeEvent(event.type, event.time, event.brush.colour, event.brush.thickness)
+					this.encodeEvent(event.type, event.time, event.brush.colour, event.brush.thickness, event.brush.opacity)
 					break
 				}
 				case this.eventType.enter: {

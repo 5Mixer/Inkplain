@@ -10,7 +10,8 @@ function Renderer (canvas) {
 
 	this.brush = {
 		thickness: 2,
-		colour: "black"
+		colour: "black",
+		opacity: 1
 	}
 
 	// background image
@@ -18,6 +19,8 @@ function Renderer (canvas) {
 	img.src = "bg.png"
 	//Essentially a reset for the image
 	this.clear = function () {
+		this.ctx.globalAlpha = 1
+
 		this.ctx.fillStyle = "white"
 		this.ctx.fillRect(0,0,this.canvas.width,this.canvas.height)
 		this.ctx.fillStyle = "black"
@@ -90,6 +93,7 @@ function Renderer (canvas) {
 	this.brushLoad = function () {
 		this.ctx.lineWidth = this.brush.thickness
 		this.ctx.strokeStyle = this.brush.colour
+		this.ctx.globalAlpha = this.brush.opacity
 	}
 
 	return this
