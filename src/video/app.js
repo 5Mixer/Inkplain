@@ -11,6 +11,7 @@ function AnnotationCanvas (canvas, audioElement, progressElement) {
 	this.colourLUT = [ 'black', 'white', "#333333","#63BBEE", "#92E285", "#ef5656", "#F09E6F", "#DC85E9", "#F5CE53", "#a07b86" ]
 
 	this.brush = { thickness: 2, colour: this.colours.black }
+	this.storedInkColour = this.colours.black // Store ink colour for instance between uses of the eraser
 	this.inCanvas = false
 	this.eventTypes = {
 		clear: 1,
@@ -81,6 +82,7 @@ function AnnotationCanvas (canvas, audioElement, progressElement) {
 	// Button / brush handlers
 	this.brushColour = function(colIndex){
 		this.brush.colour = colIndex
+		this.storedInkColour = this.brush.colour
 	}
 	this.brushColourWithLookup = function (colour) {
 		this.brushColour(this.colourLUT.indexOf(colour))
@@ -94,24 +96,30 @@ function AnnotationCanvas (canvas, audioElement, progressElement) {
 		this.recorder.record(record)
 	}
 	this.toolSelect = function (tool) {
-		let toolBrush = JSON.parse(JSON.stringify(this.brush))
+		// let toolBrush = JSON.parse(JSON.stringify(this.brush))
 		if (tool == "eraser") {
-			toolBrush.colour = this.colours.white
-			toolBrush.thickness = 40
-			toolBrush.opacity = 1
+			this.storedInkColour = this.brush.colour
+			this.brush.colour = this.colours.white
+			this.brush.thickness = 40
+			// toolBrush.thickness = 40
+			// toolBrush.opacity = 1
 		}
 		if (tool == "highlighter") {
-			toolBrush.opacity = .7
-			toolBrush.thickness = 15
+			this.brush.colour = this.storedInkColour
+			this.brush.thickness = 15
+			// toolBrush.opacity = .7
+			// toolBrush.thickness = 15
 		}
 		if (tool == "pen") {
-			toolBrush.opacity = 1
-			toolBrush.colour = this.brush.colour //this.colours.black
+			this.brush.colour = this.storedInkColour
+			this.brush.thickness = 2
+			// toolBrush.opacity = 1
+			// toolBrush.colour = this.brush.colour //this.colours.black
 			// toolBrush.thickness = 2
 		}
-		let record = {type:this.eventTypes.brush,brush:JSON.parse(JSON.stringify(toolBrush))}
-		this.recorder.record(JSON.parse(JSON.stringify(record)))
-		this.playRecord(record)
+		// let record = {type:this.eventTypes.brush,brush:JSON.parse(JSON.stringify(toolBrush))}
+		// this.recorder.record(JSON.parse(JSON.stringify(record)))
+		// this.playRecord(record)
 	}
 
 	this.takeSnap = function () {
@@ -131,6 +139,7 @@ function AnnotationCanvas (canvas, audioElement, progressElement) {
 
 		if (!this.recorder.recording){
 			this.recorder.startRecording()
+			this.storedInkColour = this.brush.colour
 
 			if (this.recordAudio)
 				this.audioManager.startRecordingAudio()
@@ -158,14 +167,15 @@ function AnnotationCanvas (canvas, audioElement, progressElement) {
 	this.setPlayProgress = function (progress) {
 		this.playback.time = this.playback.lengthTime * progress
 	}
-	this.save = function () {
+	this.save = function (title, description) {
 		let video = {
-			title: 'no title',
+			title: title,
+			description: description,
 			lengthTime: this.playback.lengthTime,
 			eventData: this.recorder.recordStore
 		}
 		axios.post('http://localhost:3000/video', (video)).then(function (response){
-			alert("Video avaliable at "+response.data)
+			console.log("Video avaliable at "+response.data)
 		})
 	}
 	this.load = function (data) {
@@ -214,9 +224,12 @@ function AnnotationCanvas (canvas, audioElement, progressElement) {
 				let recordbrush = {}
 				recordbrush.colour = records[i + 2]
 				recordbrush.thickness = records[i + 3]
-				parsedRecord.brush = JSON.parse(JSON.stringify(recordbrush))
+				this.renderer.brush = JSON.parse(JSON.stringify(recordbrush))
+				this.renderer.brush.colour = this.colourLUT[recordbrush.colour]
+				this.renderer.brushLoad()
+				// parsedRecord.brush = JSON.parse(JSON.stringify(recordbrush))
 				offset = 4
-				this.playRecord(parsedRecord)
+				// this.playRecord(parsedRecord)
 				break
 			}
 			case this.eventTypes.enter: {
@@ -236,7 +249,7 @@ function AnnotationCanvas (canvas, audioElement, progressElement) {
 		}
 		
 		// Play the next event
-		if (i < records.length - 2 && i < upTo){
+		if (i < records.length - 2 && records[i + 1] < upTo){
 			this.playEventRecursive(records,i + offset, upTo)
 		}
 	}.bind(this)

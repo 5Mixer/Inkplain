@@ -7,7 +7,14 @@
 			<div class="scrubber" @mousedown="scrubbing = true; handleScrub($event)">
 				<span class="progress" ref="progress"></span>
 			</div>
-			<div class="media-button" @click="playToggle">{{playing ? '►' : '| |' }}</div>
+			
+			<div v-if="this.annotationLogic.playback != undefined" class="unselectable">
+				<span class="media-button" @click="playToggle">{{playing ? '►' : '| |' }}</span>
+				
+				{{ humanTime(this.annotationLogic.playback.time).mins }}:{{ humanTime(this.annotationLogic.playback.time).secs }}
+				/
+				{{ humanTime(this.annotationLogic.playback.lengthTime).mins }}:{{ humanTime(this.annotationLogic.playback.lengthTime).secs }}
+			</div>
 
 			<audio src="" ref="recordedAudio" controls class="slider" v-show="false"></audio>
 		</div>
@@ -25,6 +32,7 @@ export default {
 			playback: {},
 			progress: 0.,
 			scubbing: false,
+			annotationLogic: {},
 			canvas: undefined
 		}
 	}, props: ['bus', 'recording'],
@@ -37,6 +45,17 @@ export default {
 			if (this.scrubbing) {
 				const rect = e.target.getBoundingClientRect()
 				this.annotationLogic.setPlayProgress((e.clientX - rect.left)/e.target.clientWidth)
+			}
+		},
+		humanTime: function (ms) {
+			var secs = ms / 1000
+			var hours = Math.floor(secs / ( 60 * 60))
+			var mins = Math.floor(secs/60) % 60
+			var secs = Math.floor (secs % 60)
+			return { 
+				//hours: (hours < 10 ? "0" : "") + hours,
+				mins: (mins < 10 ? "0" : "") + mins,
+				secs: (secs < 10 ? "0" : "") + secs
 			}
 		}
 	},
@@ -55,7 +74,7 @@ export default {
 		this.bus.$on('colourPick', (colour) => { this.annotationLogic.brushColourWithLookup(colour) })
 		this.bus.$on('clearCanvas', () => { this.annotationLogic.clearCanvas() } )
 		this.bus.$on('brushWidth', (width) => { this.annotationLogic.brushWidth(width) })
-		this.bus.$on('save', () => { this.annotationLogic.save() })
+		this.bus.$on('save', (title, description) => { this.annotationLogic.save(title, description) })
 		this.bus.$on('load', (data) => { this.annotationLogic.load(data) })
 		this.bus.$on('enablePlayback', () => {this.initialRecord = true})
 	}
@@ -70,7 +89,6 @@ audio {
 canvas {
 	height: 100%;
 	border: 1px solid black;
-	background-color: blue;
 	display: block;
 	margin-left: auto;
 	margin-right: auto;
@@ -97,7 +115,7 @@ canvas {
 }
 .progress {
 	display:block;
-	height: 100%;
+	height: 100%; 
 	pointer-events: none;
 	background: #444;
 	border-right: solid 6px #c3dff7;

@@ -20,7 +20,7 @@ app.get('/video/:id', (req, res) => {
 	}
 })
 app.get('/listing/', (req, res) => {
-	res.json(Object.keys(videos))
+	res.json(Object.keys(videos).map((id) => { return { id: id, title: videos[id].title, description: videos[id].description, uploadDate: new Date(videos[id].uploadDate) }} ))
 })
 app.post('/video/', function (req, res) {
 	// bit of a strange id generation algorithm
@@ -28,7 +28,7 @@ app.post('/video/', function (req, res) {
 	console.log("video pushed "+id)
 
 	videos[id] = req.body
-	console.log(videos)
+	videos[id].uploadDate = Date.now()
 	res.send('id: '+id)
 })
 

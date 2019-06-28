@@ -1,11 +1,25 @@
 <template>
 	<div>
+
 		<div class="recordingSection left">
 			<annotation-canvas :bus="bus" :recording="recording" :micActive="micActive"></annotation-canvas>
 		</div>
 		<div class="recordingSection right">
 			<annotation-tools :recording="recording" @toggleMic="toggleMic" @toggleRec="toggleRec" @colourPick="changeColour" @clearCanvas="clearCanvas" @toolSelect="toolSelect" @brushWidth="brushWidth"></annotation-tools>
-			<button class="tool-button" @click="save">Publish</button>
+		</div>
+		
+		<div class="publishSection" v-if="!recording && initialRecord">
+			<div class="publishPanel">
+				<h1>Publish</h1>
+				<input type="text" placeholder="Video Title" v-model="title"><br>
+				<textarea id="" name="" cols="70" rows="3" placeholder="Video Description" v-model="description"></textarea><br>
+
+				<button class="tool-button" @click="save">Publish</button>
+				<div v-if="published">
+					<span>Accessible at </span>
+					<a href="">annotatii.com/play/{{publishId}}</a>
+				</div>
+			</div>
 		</div>
 	</div>
 </template>
@@ -25,7 +39,15 @@ export default {
 		return {
 			bus: bus,
 			recording: false,
-			micActive: false
+			micActive: false,
+
+			initialRecord: false,
+
+			title: "",
+			description: "",
+
+			published: false,
+			publishId: ''
 		}
 	},
 	methods: {
@@ -35,6 +57,7 @@ export default {
 		toggleRec: function () {
 			bus.$emit("recToggle")
 			this.recording = !this.recording
+			this.initialRecord = true
 		},
 		toggleMic: function () {
 			bus.$emit("micToggle")
@@ -50,7 +73,7 @@ export default {
 			bus.$emit("brushWidth", width)
 		},
 		save: function () {
-			bus.$emit("save")
+			bus.$emit("save", this.title, this.description)
 		}
 	}
 }
@@ -59,6 +82,26 @@ export default {
 <style scoped>
 annotation-tools {
 	height: 90px;
+}
+input,textarea {
+	margin: 5px;
+	padding: 20px;
+	
+	line-height: calc(10px - .5em);
+
+	font-size: 1.4em;
+	line-height: 1.6em;
+	border: 1px solid gray;
+	margin: auto;
+	display: block;
+	
+	min-width: 100%;
+	max-width: 100%;
+}
+textarea {
+	font-size: 1em;
+	min-height: 9em;
+	max-height: 15em;
 }
 .tool-button {
 	display: block;
@@ -81,6 +124,23 @@ annotation-tools {
 	-ms-user-select: none; /* IE10+/Edge */
 	user-select: none; /* Standard */
 }
+.publishPanel {
+	min-width: 50%;
+	width: 50%;
+	max-width: 50%;
+	margin: auto;
+	display: block;
+	border: solid 1px gray;
+	padding: 20px;
+
+}
+.publishSection {
+	margin-top: 4em;
+	min-width: 100%;
+	min-height: 100vh;
+	display:block;
+	padding: 20px;
+}
 
 annotation-canvas {
 	width: 100%;
@@ -96,7 +156,6 @@ annotation-canvas {
 	float: left;
 	height: 50%;
 	display: block;
-	background: black;
 }
 .right {
 	width: 10vw;

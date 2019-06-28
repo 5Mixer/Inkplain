@@ -1,8 +1,11 @@
 <template>
 	<div>
-		<h1>{{$route.params.id}}</h1>
+		<h1>{{ videoData.title }}</h1>
 		<div class="recordingSection left">
 			<annotation-canvas :bus="bus" :recording="false" :micActive="false"></annotation-canvas>
+		</div>
+		<div class="description">
+			{{ videoData.description }}
 		</div>
 	</div>
 </template>
@@ -20,7 +23,8 @@ export default {
 	},
 	data: function () {
 		return {
-			bus: bus
+			bus: bus,
+			videoData: {}
 		}
 	},
 	methods: {
@@ -28,9 +32,10 @@ export default {
 	mounted: function() {
 		console.log(this.$route.params.id)
 		axios.get(`http://localhost:3000/video/${this.$route.params.id}`).then(function(response) {
+			this.videoData = response.data
 			bus.$emit('load', response.data)
 			bus.$emit('enablePlayback')
-		})
+		}.bind(this))
 	
 	}
 }
@@ -44,13 +49,13 @@ annotation-canvas {
 }
 .recordingSection {
 	margin-left: 5px;
-	display: inline-block;
 	min-height: 100%;
 }
 .left {
-	float: left;
 	height: 50%;
+	display: inline-block;
+}
+.description {
 	display: block;
-	background: black;
 }
 </style>

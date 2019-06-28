@@ -28,19 +28,41 @@ a:hover {
 html {
 	box-sizing: border-box;
 }
-body, h1, h2, h3, h4, h5, h6, p, ol, ul {
-	margin: 0;
-	margin-left: 10px;
+body, h1, h2, h3, h4, h5, h6, p, ol, ul, textarea {
 	padding: 0;
 	color: #111;
 	font-family: 'Heebo', serif; 
 	line-height: 1.6em;
 	font-size: 1.1em;
 }
-/*h1 { font-size: 2.6rem; font-family: 'Patua One', serif; font-weight: 400; color: #101010}*/
+input,textarea {
+	margin: 5px;
+	padding: 20px;
+	
+	line-height: calc(10px - .5em);
+
+	font-size: 1em;
+	line-height: 1.4em;
+	border: 1px solid gray;
+}
+body {
+	margin: 2em;
+}
+h1 {
+	font-size: 2em; 
+	/*font-family: 'Patua One', serif; */
+	font-weight: 400;
+	color: #101010
+}
 img {
 	max-width: 100%;
 	height: auto;
+}
+.unselectable {
+	-webkit-user-select: none; /* Safari */
+	-moz-user-select: none; /* Firefox */
+	-ms-user-select: none; /* IE10+/Edge */
+	user-select: none; /* Standard */
 }
 
 *, *:before, *:after {
