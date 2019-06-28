@@ -70,6 +70,9 @@ function AnnotationCanvas (canvas, audioElement, progressElement) {
 		this.recorder.record({ type: this.eventTypes.leave})
 	}.bind(this));
 	canvas.addEventListener("mouseenter", function (e) {
+		let record = {type:this.eventTypes.brush,brush:JSON.parse(JSON.stringify(this.brush))}
+		this.playRecord(record)
+		this.recorder.record(record)
 		
 		this.recorder.record({ type: this.eventTypes.enter})
 	}.bind(this));
@@ -77,9 +80,9 @@ function AnnotationCanvas (canvas, audioElement, progressElement) {
 	// Button / brush handlers
 	this.brushColour = function(colIndex){
 		this.brush.colour = colIndex
-		let record = {type:this.eventTypes.brush,brush:JSON.parse(JSON.stringify(this.brush))}
-		this.recorder.record(JSON.parse(JSON.stringify(record)))
-		this.playRecord(record)
+		// let record = {type:this.eventTypes.brush,brush:JSON.parse(JSON.stringify(this.brush))}
+		// this.recorder.record(JSON.parse(JSON.stringify(record)))
+		// this.playRecord(record)
 	}
 	this.brushColourWithLookup = function (colour) {
 		this.brushColour(this.colourLUT.indexOf(colour))
@@ -87,9 +90,9 @@ function AnnotationCanvas (canvas, audioElement, progressElement) {
 	}
 	this.brushWidth = function(val){
 		this.brush.thickness = val
-		let record = {type:this.eventTypes.brush,brush:JSON.parse(JSON.stringify(this.brush))}
-		this.playRecord(record)
-		this.recorder.record(record)
+		// let record = {type:this.eventTypes.brush,brush:JSON.parse(JSON.stringify(this.brush))}
+		// this.playRecord(record)
+		// this.recorder.record(record)
 	}
 	this.clearCanvas = function() {
 		var newCanvas = document.createElement('canvas');
@@ -102,7 +105,6 @@ function AnnotationCanvas (canvas, audioElement, progressElement) {
 
 		//apply the old canvas to the new one
 		context.drawImage(canvas, 0, 0);
-		console.log(newCanvas)
 
 		let record = {type: this.eventTypes.clear}
 		this.playRecord(record)
@@ -185,6 +187,10 @@ function AnnotationCanvas (canvas, audioElement, progressElement) {
 	this.renderVideo = function(records, upTo) {
 		this.renderer.clear()
 		this.playEventRecursive(records,0, upTo)
+
+		// Finish any open pen strokes
+		if (this.renderer.down)
+			this.renderer.penUp()
 	}
 	
 	let offset = 0
