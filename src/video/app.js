@@ -1,7 +1,8 @@
-import {Recorder} from "@/video/record.js"
-import {Renderer} from "@/video/render.js"
-import {AudioManager} from "@/video/audio.js"
+import { Recorder } from "@/video/record.js"
+import { Renderer } from "@/video/render.js"
+import { AudioManager } from "@/video/audio.js"
 const axios = require('axios')
+
 function AnnotationCanvas (canvas, audioElement, progressElement) {
 	this.colours = {
 		black: 0,
@@ -33,13 +34,6 @@ function AnnotationCanvas (canvas, audioElement, progressElement) {
 	this.audioManager = new AudioManager(audioElement)
 	this.canvas = this.renderer.canvas
 
-	this.recordDrawEvent = function(shouldDraw) {
-		if (this.recorder.recording) {
-			let record = {type: shouldDraw ? this.eventTypes.down : this.eventTypes.up }
-			this.playRecord(record)
-			this.recorder.record(record)
-		}
-	}
 	// Register event handlers
 	canvas.addEventListener("pointermove", function(e) {
 		if (!this.recorder.recording) return
@@ -54,7 +48,10 @@ function AnnotationCanvas (canvas, audioElement, progressElement) {
 	}.bind(this));
 
 	canvas.addEventListener("pointerdown", function (e) {
-		this.recordDrawEvent(true)
+		let record1 = { type: this.eventTypes.down }
+		this.playRecord(record1)
+		this.recorder.record(record1)
+
 		const rect = canvas.getBoundingClientRect()
 		
 		let record = {type:this.eventTypes.moving,coords:{x:Math.round((e.clientX - rect.left)/canvas.clientWidth*1920), y: Math.round((e.clientY - rect.top)/canvas.clientHeight*1080)}}
@@ -62,10 +59,14 @@ function AnnotationCanvas (canvas, audioElement, progressElement) {
 		this.playRecord(record)
 	}.bind(this));
 	canvas.addEventListener("pointerup", function (e) {
-		this.recordDrawEvent(false)
+		let record = { type: this.eventTypes.up }
+		this.playRecord(record)
+		this.recorder.record(record)
 	}.bind(this));
 	canvas.addEventListener("mouseout", function (e) {
-		this.recordDrawEvent(false)
+		let record = { type: this.eventTypes.up }
+		this.playRecord(record)
+		this.recorder.record(record)
 		
 		this.recorder.record({ type: this.eventTypes.leave})
 	}.bind(this));
@@ -80,32 +81,14 @@ function AnnotationCanvas (canvas, audioElement, progressElement) {
 	// Button / brush handlers
 	this.brushColour = function(colIndex){
 		this.brush.colour = colIndex
-		// let record = {type:this.eventTypes.brush,brush:JSON.parse(JSON.stringify(this.brush))}
-		// this.recorder.record(JSON.parse(JSON.stringify(record)))
-		// this.playRecord(record)
 	}
 	this.brushColourWithLookup = function (colour) {
 		this.brushColour(this.colourLUT.indexOf(colour))
-
 	}
 	this.brushWidth = function(val){
 		this.brush.thickness = val
-		// let record = {type:this.eventTypes.brush,brush:JSON.parse(JSON.stringify(this.brush))}
-		// this.playRecord(record)
-		// this.recorder.record(record)
 	}
 	this.clearCanvas = function() {
-		var newCanvas = document.createElement('canvas');
-		// document.body.appendChild(newCanvas)
-		var context = newCanvas.getContext('2d');
-
-		//set dimensions
-		newCanvas.width = canvas.width;
-		newCanvas.height = canvas.height;
-
-		//apply the old canvas to the new one
-		context.drawImage(canvas, 0, 0);
-
 		let record = {type: this.eventTypes.clear}
 		this.playRecord(record)
 		this.recorder.record(record)
@@ -129,6 +112,16 @@ function AnnotationCanvas (canvas, audioElement, progressElement) {
 		let record = {type:this.eventTypes.brush,brush:JSON.parse(JSON.stringify(toolBrush))}
 		this.recorder.record(JSON.parse(JSON.stringify(record)))
 		this.playRecord(record)
+	}
+
+	this.takeSnap = function () {
+		var newCanvas = document.createElement('canvas');
+		var context = newCanvas.getContext('2d');
+
+		newCanvas.width = canvas.width;
+		newCanvas.height = canvas.height;
+
+		context.drawImage(canvas, 0, 0);
 	}
 
 	// Switch recording mode on/off
@@ -195,15 +188,9 @@ function AnnotationCanvas (canvas, audioElement, progressElement) {
 	
 	let offset = 0
 	this.playEventRecursive = function(records,i,upTo) {
-		// Stop recursively replaying events if this event is after where replaying should stop
-		if (records[i+1] > upTo)
-			return
 
-		// let parsedRecord = {}
 		switch (records[i]) {
 			case this.eventTypes.moving: {
-				// parsedRecord.type = this.eventTypes.moving
-				// parsedRecord.coords = { x: records[i + 2], y: records[i + 3] }
 				offset = 4
 				this.renderer.move(records[i + 2], records[i + 3])
 				break
@@ -214,26 +201,17 @@ function AnnotationCanvas (canvas, audioElement, progressElement) {
 				break
 			}
 			case this.eventTypes.up: {
-				// parsedRecord.type = this.eventTypes.up
-				// parsedRecord.time = records[i + 1]
 				offset = 2
 				this.renderer.penUp()
 				break
 			}
 			case this.eventTypes.down: {
-				// parsedRecord.type = this.eventTypes.down
-				// parsedRecord.time = records[i + 1]
 				offset = 2
 				this.renderer.penDown()
 				break
 			}
 			case this.eventTypes.brush: {
-				let parsedRecord = {}
-				parsedRecord.type = this.eventTypes.brush
-				parsedRecord.time = records[i + 1]
-
 				let recordbrush = {}
-
 				recordbrush.colour = records[i + 2]
 				recordbrush.thickness = records[i + 3]
 				parsedRecord.brush = JSON.parse(JSON.stringify(recordbrush))
@@ -256,9 +234,9 @@ function AnnotationCanvas (canvas, audioElement, progressElement) {
 				break
 			}
 		}
-	
-		// TODO: This shouldn't have to be converted to an array
-		if (i < records.length - 2){
+		
+		// Play the next event
+		if (i < records.length - 2 && i < upTo){
 			this.playEventRecursive(records,i + offset, upTo)
 		}
 	}.bind(this)
@@ -286,8 +264,12 @@ function AnnotationCanvas (canvas, audioElement, progressElement) {
 			this.renderer.clear()
 		}
 	}
-
+	
+	var lastTime = Date.now()
 	this.drawframe = function() {
+		let delta = Date.now() - lastTime
+		lastTime = Date.now()
+
 		if (this.recorder.recording){
 			this.playback.time = 0
 		}else{
@@ -297,7 +279,7 @@ function AnnotationCanvas (canvas, audioElement, progressElement) {
 				this.renderer.drawPointer()
 			}
 			if (this.playback.playing && this.playback.time < this.playback.lengthTime)
-				this.playback.time += 1000/120
+				this.playback.time += delta
 			if (this.playback.time >= this.playback.lengthTime) {
 				this.playback.time = this.playback.lengthTime
 				this.playback.playing == false
@@ -306,10 +288,9 @@ function AnnotationCanvas (canvas, audioElement, progressElement) {
 			this.playback.progress = this.playback.time / this.playback.lengthTime
 			progressElement.style.width = this.playback.progress * 100 + "%"
 		}
-		// requestAnimationFrame(this.drawframe)
+		requestAnimationFrame(this.drawframe)
 	}.bind(this)
-	// this.drawframe()
-	setInterval(this.drawframe, 1000/120)
+	this.drawframe()
 	return this
 }
 export { AnnotationCanvas }
