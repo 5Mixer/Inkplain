@@ -43,8 +43,24 @@ app.post('/video/', function (req, res) {
 		eventData: req.body.eventData
 	})
 	video.save()
-	console.log(video)
 	res.send({ success: true, id: video.id})
+})
+
+
+app.post('/user/', async function (req, res) {
+	User.find({ email: req.body.email }, async function (err, docs) {
+		if (docs.length > 0) {
+			res.send({ success: false, error: "Email taken" })
+			return
+		} else {
+			var user = new User({
+				email: req.body.email,
+				password: req.body.password
+			})
+			await user.save()
+			res.send({ success: true })
+		}
+	})
 })
 
 app.listen(port, () => console.log(`Server listening on port ${port}`))

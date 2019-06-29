@@ -16,7 +16,7 @@
 
 		<colour-picker @colourPick="colourPick"></colour-picker>
 		<span class="tool-button">
-			<input type="range" min="1" max="30" value="2" class="thicknessSlider" v-on:input="brushWidth">
+			<input type="range" min="1" max="30" value="2" class="thicknessSlider" v-on:change="brushWidth">
 		</span>
 	</div>
 </template>
