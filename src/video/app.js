@@ -46,6 +46,37 @@ function AnnotationCanvas (canvas, audioElement, progressElement) {
 			this.recorder.record(record)
 			this.playRecord(record)
 		})
+		e.preventDefault()
+	}.bind(this));
+
+	canvas.addEventListener("touchmove", function (e) {
+		if (!this.recorder.recording) return
+
+		const rect = canvas.getBoundingClientRect()
+		// let record = {type:this.eventTypes.moving,coords:{x:Math.round((e.clientX - rect.left)/canvas.clientWidth*1920), y: Math.round((e.clientY - rect.top)/canvas.clientHeight*1080)}}
+		let record = {type:this.eventTypes.moving,coords:{x:Math.round((e.targetTouches[0].clientX - rect.left)/canvas.clientWidth*1920), y: Math.round((e.targetTouches[0].clientY - rect.top)/canvas.clientHeight*1080)}}
+		this.recorder.record(record)
+		this.playRecord(record)
+
+		e.preventDefault()
+	}.bind(this))
+	canvas.addEventListener("touchstart", function (e) {
+		let record1 = { type: this.eventTypes.down }
+		this.playRecord(record1)
+		this.recorder.record(record1)
+		e.preventDefault()
+	}.bind(this))
+	canvas.addEventListener("touchend", function (e) {
+		let record = { type: this.eventTypes.up }
+		this.playRecord(record)
+		this.recorder.record(record)
+		e.preventDefault()
+	}.bind(this));
+	canvas.addEventListener("touchcancel", function (e) {
+		let record = { type: this.eventTypes.up }
+		this.playRecord(record)
+		this.recorder.record(record)
+		e.preventDefault()
 	}.bind(this));
 
 	canvas.addEventListener("pointerdown", function (e) {
@@ -58,11 +89,13 @@ function AnnotationCanvas (canvas, audioElement, progressElement) {
 		let record = {type:this.eventTypes.moving,coords:{x:Math.round((e.clientX - rect.left)/canvas.clientWidth*1920), y: Math.round((e.clientY - rect.top)/canvas.clientHeight*1080)}}
 		this.recorder.record(record)
 		this.playRecord(record)
+		e.preventDefault()
 	}.bind(this));
 	canvas.addEventListener("pointerup", function (e) {
 		let record = { type: this.eventTypes.up }
 		this.playRecord(record)
 		this.recorder.record(record)
+		e.preventDefault()
 	}.bind(this));
 	canvas.addEventListener("mouseout", function (e) {
 		let record = { type: this.eventTypes.up }
@@ -70,6 +103,7 @@ function AnnotationCanvas (canvas, audioElement, progressElement) {
 		this.recorder.record(record)
 		
 		this.recorder.record({ type: this.eventTypes.leave})
+		e.preventDefault()
 	}.bind(this));
 	canvas.addEventListener("mouseenter", function (e) {
 		let record = {type:this.eventTypes.brush,brush:JSON.parse(JSON.stringify(this.brush))}
@@ -77,6 +111,7 @@ function AnnotationCanvas (canvas, audioElement, progressElement) {
 		this.recorder.record(record)
 		
 		this.recorder.record({ type: this.eventTypes.enter})
+		e.preventDefault()
 	}.bind(this));
 
 	// Button / brush handlers

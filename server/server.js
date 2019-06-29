@@ -29,7 +29,7 @@ app.post('/video/', function (req, res) {
 
 	videos[id] = req.body
 	videos[id].uploadDate = Date.now()
-	res.send('id: '+id)
+	res.send({ success: true, id: id})
 })
 
 app.listen(port, () => console.log(`Server listening on port ${port}`))

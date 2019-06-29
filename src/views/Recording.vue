@@ -78,12 +78,12 @@ export default {
 		}
 	},
 	mounted: function () {
-		bus.$on("save", function (video) {
+		bus.$on("publish", function (video) {
 			axios.post('http://localhost:3000/video', (video)).then(function (response){
-				this.router.push({ name: 'play', params: { id: video.id} })
-
-			})
-		})
+				if (response.data.success)
+					this.$router.push({ name: 'playback', params: { id: response.data.id } })
+			}.bind(this))
+		}.bind(this))
 	}
 }
 </script>

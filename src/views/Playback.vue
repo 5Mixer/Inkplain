@@ -30,7 +30,6 @@ export default {
 	methods: {
 	},
 	mounted: function() {
-		console.log(this.$route.params.id)
 		axios.get(`http://localhost:3000/video/${this.$route.params.id}`).then(function(response) {
 			this.videoData = response.data
 			bus.$emit('load', response.data)
