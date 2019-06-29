@@ -30,7 +30,6 @@ import AnnotationCanvas from '@/components/Canvas.vue'
 const axios = require('axios')
 import Vue from 'vue'
 const bus = new Vue()
-
 export default {
 	name: 'home',
 	components: {

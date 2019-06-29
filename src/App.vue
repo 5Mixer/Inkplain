@@ -1,7 +1,7 @@
 <template>
 	<div id="app">
 		<div id="nav">
-			<router-link to="/">Home</router-link>
+			<router-link to="/">Annotati</router-link>
 			<router-link to="/about">About</router-link> 
 			<router-link to="/rec">Record</router-link> 
 			<router-link to="/play">Videos</router-link>
@@ -70,6 +70,27 @@ img {
 }
 ol, ul {
 	list-style: none;
+}
+.button {
+	display: inline-block;
+	cursor: pointer;
+
+	background-color: white;
+	text-align: center;
+
+	margin: 5px;
+	margin-top: 0;
+	padding: 20px;
+	
+	line-height: calc(10px - .5em);
+
+	font-size: 1em;
+	border: 1px solid gray;
+
+	-webkit-user-select: none; /* Safari */
+	-moz-user-select: none; /* Firefox */
+	-ms-user-select: none; /* IE10+/Edge */
+	user-select: none; /* Standard */
 }
 
 </style>

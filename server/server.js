@@ -2,34 +2,49 @@ const express = require('express')
 const app = express()
 const port = 3000
 
-var videos = {}
+const mongoose = require('mongoose')
+mongoose.connect('mongodb://localhost:27017/annotate', { useNewUrlParser: true })
+
+const User = require("./models/User")
+const Video = require("./models/Video")
 
 app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
+	res.header("Access-Control-Allow-Origin", "*");
+	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+	next();
 });
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.get('/video/:id', (req, res) => {
-	if (videos[req.params.id] != undefined) {
-		res.json(videos[req.params.id])
-	} else {
-		res.send("no video there")
-	}
+	Video.findOne({ id: req.params.id }, function (err, video) {
+		if (!err) {
+			res.json(video)
+		} else {
+			console.log (err)
+			res.send(501)
+		}
+	})
 })
 app.get('/listing/', (req, res) => {
-	res.json(Object.keys(videos).map((id) => { return { id: id, title: videos[id].title, description: videos[id].description, uploadDate: new Date(videos[id].uploadDate) }} ))
+	Video.find({}).select("title uploadDate").then(function (videos){
+		res.json(videos)
+	}, function (err) {
+		console.log(err)
+		res.send(501)
+	})
 })
 app.post('/video/', function (req, res) {
-	// bit of a strange id generation algorithm
-	var id = ((1111111+Math.floor(Math.random() * 8888888))+"").split("").map(a => { return 'bcdghnjkxyz'.split("")[a]}).join("")
-	console.log("video pushed "+id)
-
-	videos[id] = req.body
-	videos[id].uploadDate = Date.now()
-	res.send({ success: true, id: id})
+	var video = new Video({
+		title: req.body.title,
+		description: req.body.description,
+		lengthTime: req.body.lengthTime,
+		uploader: "INCOMPLETE",
+		eventData: req.body.eventData
+	})
+	video.save()
+	console.log(video)
+	res.send({ success: true, id: video.id})
 })
 
 app.listen(port, () => console.log(`Server listening on port ${port}`))

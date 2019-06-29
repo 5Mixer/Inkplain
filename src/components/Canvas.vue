@@ -106,7 +106,7 @@ export default {
 	}
 }
 </script>
-<style scoped>
+<style>
 audio {
 	width: 100%;
 	margin-left: auto;

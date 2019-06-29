@@ -214,7 +214,8 @@ function AnnotationCanvas (canvas, audioElement, progressElement) {
 	this.exportVideo = new function (video) {}
 
 	this.load = function (data) {
-		this.recorder.recordStore = (data.eventData)
+		this.recorder.recordStore = data.eventData
+
 		this.playback.lengthTime = data.lengthTime
 		this.recorder.recordingLength = data.lengthTime
 		this.playback.time = 0
