@@ -12,7 +12,7 @@
 				When you are finished, click publish and share your video link.
 			</p>
 
-			<div>
+			<div class="form">
 				<h2>Sign up for free</h2>
 				<table>
 					<tr>
@@ -34,7 +34,14 @@
 				</table>
 				<div class="error" v-if="errorMessage != ''">{{ errorMessage }}</div>
 				<br>
-				<div class="register button" @click="signup()">Sign up</div>
+				<div class="register button" @click="signup()">Create account</div>
+			</div>
+			
+			<div>
+				<h2>
+					Have an account?
+				</h2>
+				<div class="button" @click="login()">Login</div>
 			</div>
 			
 
@@ -74,7 +81,9 @@ export default {
 					this.errorMessage = "That email already has an account."
 				}
 			}.bind(this))
-			
+		},
+		login: function () {
+			this.$router.push({ name: 'login' })
 		}
 	}
 }
@@ -83,24 +92,31 @@ export default {
 .hero {
 	width: 100%;
 	padding: 5em;
-	padding-top: 2em;
+	padding-top: 0em;
 }
-.hero > h1 {
+.hero h1 {
 	font-size: 3em;
+	margin-top: 0em;
+	margin-bottom: .5em;
 }
 .basicInfo {
 	max-width: 35em;
 }
 .button {
 	display: inline-block;
+	border: none;
+	border-radius: 3px;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
 }
 label {
 	float:right;
 }
 .register {
-	padding: 1.3em;
-	font-size: 1.3em;
+	padding: 1.2em;
+	font-size: 1em;
 	font-weight: bold;
+	width: 350px;
+	background: #6aeb6c;
 }
 img {
 	float: right;

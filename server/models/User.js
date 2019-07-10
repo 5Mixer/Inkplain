@@ -21,7 +21,7 @@ UserSchema.pre('save', function (next) {
 	}
 })
 
-UserSchema.methods.comparePassword = function (plaintext, callback) {
+UserSchema.methods.comparePassword = function (plaintext) {
 	return bcrypt.compareSync(plaintext, this.password)
 }
 

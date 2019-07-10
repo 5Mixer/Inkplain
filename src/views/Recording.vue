@@ -78,7 +78,9 @@ export default {
 	},
 	mounted: function () {
 		bus.$on("publish", function (video) {
-			axios.post('http://localhost:3000/video', (video)).then(function (response){
+			console.log("Publish")
+			console.log(video)
+			axios.post('http://localhost:3000/video', video, { withCredentials: true }).then(function (response){
 				if (response.data.success)
 					this.$router.push({ name: 'playback', params: { id: response.data.id } })
 			}.bind(this))

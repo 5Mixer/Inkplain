@@ -1,6 +1,11 @@
 const express = require('express')
 const app = express()
 const port = 3000
+const cors = require('cors')
+
+const session = require('express-session')
+const MongoStore = require('connect-mongo')(session);
+const auth = require('./auth')
 
 const mongoose = require('mongoose')
 mongoose.connect('mongodb://localhost:27017/annotate', { useNewUrlParser: true })
@@ -8,18 +13,32 @@ mongoose.connect('mongodb://localhost:27017/annotate', { useNewUrlParser: true }
 const User = require("./models/User")
 const Video = require("./models/Video")
 
-app.use(function(req, res, next) {
-	res.header("Access-Control-Allow-Origin", "*");
-	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-	next();
-});
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+// app.use(cors({origin:['http://localhost:8080', 'http://localhost:3000'], methods:['GET', 'POST'], credentials: true}))
+app.use(cors({ credentials: true, origin: ['http://localhost:8080']}))
+
+app.use(session({
+	resave: false,
+	saveUninitialized: false,
+	secret: 'nwiobxrf3oif7bnwe',
+	// name: 'sessionstore',
+	store: new MongoStore({ mongooseConnection: mongoose.connection }),
+	cookie: {
+		httpOnly: false, secure: false
+	}
+}));
+
+// app.use(function(req, res, next) {
+//   res.header('Access-Control-Allow-Origin', 'http://localhost:8080')//req.hostname);
+//   res.header('Access-Control-Allow-Credentials', true);
+//   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  // next();
+// });
 
 app.get('/video/:id', (req, res) => {
 	Video.findOne({ id: req.params.id }, function (err, video) {
-		if (!err) {
-			res.json(video)
+		if (!err) { res.json(video)
 		} else {
 			console.log (err)
 			res.send(501)
@@ -34,7 +53,8 @@ app.get('/listing/', (req, res) => {
 		res.send(501)
 	})
 })
-app.post('/video/', function (req, res) {
+app.post('/video/', auth.checkAuthentication, function (req, res) {
+// app.post('/video/', function (req, res) {
 	var video = new Video({
 		title: req.body.title,
 		description: req.body.description,
@@ -45,7 +65,27 @@ app.post('/video/', function (req, res) {
 	video.save()
 	res.send({ success: true, id: video.id})
 })
-
+// app.get('/user/', auth.checkAuthentication, function (req, res) {
+app.get('/user/', function (req, res) {
+	console.log(req.session)
+	if (req.session.userId) {
+		User.findById(req.session.userId, async function (err, user) {
+			res.json(user)
+		})
+	} else {
+		res.json(req.session)
+	}
+})
+app.get('/count', function (req, res) {
+	console.log(req.headers)
+	console.log(req.session)
+	if (req.session.count){
+		res.json(""+req.session.count++)
+	}else {
+		req.session.count = 10
+		res.send('first')
+	}
+})
 
 app.post('/user/', async function (req, res) {
 	User.find({ email: req.body.email }, async function (err, docs) {
@@ -57,8 +97,37 @@ app.post('/user/', async function (req, res) {
 				email: req.body.email,
 				password: req.body.password
 			})
-			await user.save()
-			res.send({ success: true })
+			user.save(function (err) {
+				console.log(err)
+				req.session.userId = user._id
+				res.send({ success: true })
+			})
+		}
+	})
+})
+app.post('/login/', async function (req, res) {
+	User.findOne({ email: req.body.email }, async function (err, user) {
+		if (user != undefined) {
+			if (user.comparePassword(req.body.password)) {
+				if (req.session.userId){
+					req.session.userId = user._id
+				} else {
+					req.session.userId = user._id
+
+				}
+				res.send({success:true})
+				// res.json({
+				// 	success: true,
+				// 	message: 'Authentication successful!',
+				// 	session: req.session
+				// });
+			} else {
+				// Password didn't match
+				res.json({success: false})
+			}
+		} else {
+			// No user found
+			res.json({success: false})
 		}
 	})
 })

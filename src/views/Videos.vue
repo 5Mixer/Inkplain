@@ -35,7 +35,7 @@ export default {
 	},
 	mounted: function() {
 		console.log(this.$route.params.id)
-		axios.get(`http://localhost:3000/listing/`).then(function(response) {
+		axios.get(`http://localhost:3000/listing/`, { withCredentials: true }).then(function(response) {
 			this.videos = response.data
 		}.bind(this))
 	
