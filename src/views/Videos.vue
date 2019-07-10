@@ -27,7 +27,7 @@ export default {
 	},
 	methods: {
 		fullHumanDate : function (rawTime) {
-			return new Date(rawTime).toLocaleString("en-US")
+			return new Date(rawTime).toLocaleString("en-AU")
 		},
 		filter: function (video) {
 			return video.title.indexOf(this.searchQuery) != -1

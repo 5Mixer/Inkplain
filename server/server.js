@@ -55,6 +55,15 @@ app.get('/userlisting/', auth.checkAuthentication, (req, res) => {
 		res.send(501)
 	})
 })
+app.post('/deletevideo/', auth.checkAuthentication, function (req, res) {
+	Video.deleteOne({ uploader: req.session.userId, id: req.body.id }).then(function (result){
+		if (result.ok) {
+			res.send({ success: true })
+		} else {
+			res.send({ success: false })
+		}
+	})
+})
 app.post('/video/', auth.checkAuthentication, function (req, res) {
 	if (req.body.eventData == undefined || req.body.eventData.length < 2) {
 		res.send({ success: false, error: "Lacking event data"})
@@ -70,9 +79,7 @@ app.post('/video/', auth.checkAuthentication, function (req, res) {
 	video.save()
 	res.send({ success: true, id: video.id})
 })
-// app.get('/user/', auth.checkAuthentication, function (req, res) {
-app.get('/user/', function (req, res) {
-	console.log(req.session)
+app.get('/user/', auth.checkAuthentication, function (req, res) {
 	if (req.session.userId) {
 		User.findById(req.session.userId, async function (err, user) {
 			res.json(user)
@@ -99,6 +106,11 @@ app.post('/user/', async function (req, res) {
 			})
 		}
 	})
+})
+app.post('/logout/', async function (req, res) {
+	req.session.destroy(function(result) {
+		res.clearCookie('connect.sid', { path: '/' }).send({ success: true })
+	});
 })
 app.post('/login/', async function (req, res) {
 	User.findOne({ email: req.body.email }, async function (err, user) {

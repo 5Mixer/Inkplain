@@ -10,6 +10,9 @@
 				<router-link to="/rec">Record</router-link> 
 			</span>
 			<router-link to="/play">Videos</router-link>
+			<span v-show="authenticated">
+				<span class="router-link" @click="logout()">Log out</span> 
+			</span>
 		</div>
 		<router-view/>
 	</div>
@@ -25,15 +28,33 @@ export default {
 			authenticated: !false
 		}
 	},
+	methods: {
+		logout: function () {
+			axios.post('http://localhost:3000/logout', { withCredentials: true }).then((response) => {
+				if (response.data.success)
+					this.$router.push({ name: 'home' })
+			})
+		}
+	},
+	watch:{
+		$route (to, from){
+			axios.get(`http://localhost:3000/user/`, { withCredentials: true }).then((response) => {
+				this.authenticated = response.data != undefined
+			})
+		}
+	},
+
 	mounted: function () {
-		// axios.post('http://localhost:3000/video', video, { withCredentials: true }).then((response) => {
-		// })
+		axios.get(`http://localhost:3000/user/`, { withCredentials: true }).then((response) => {
+			this.authenticated = response.data != undefined
+		})
 	}
 }
 </script>
 
 <style lang="scss">
-a {
+a, .router-link {
+	cursor: pointer;
     color: #222;
     text-decoration: none;
     background: linear-gradient(to top, #ff7f7f66 5%, transparent 5%);
@@ -43,7 +64,7 @@ a {
 	padding: .2em;
 	margin: .3em;
 }
-a:hover {
+a:hover, .router-link:hover {
     background: linear-gradient(to top,  #ff7f7f66 50%, transparent 50%);
 }
 

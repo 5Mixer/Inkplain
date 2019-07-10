@@ -6,10 +6,11 @@ import Recording from './views/Recording.vue'
 import Videos from './views/Videos.vue'
 import Playback from './views/Playback.vue'
 import VideoManager from './views/VideoManager.vue'
+const axios = require('axios')
 
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
 	mode: 'history',
 	base: process.env.BASE_URL,
 	routes: [
@@ -26,11 +27,13 @@ export default new Router({
 		{
 			path: '/rec',
 			name: 'recording',
+			meta: { auth: true },
 			component: Recording
 		},
 		{
 			path: '/manage/',
 			name: 'manage',
+			meta: { auth: true },
 			component: VideoManager
 		},
 		{
@@ -55,3 +58,15 @@ export default new Router({
 		}
 	]
 })
+router.beforeEach((to, from, next) => {
+	if (to.meta == undefined || !to.meta.auth) {
+		next()
+		return
+	}
+
+	axios.get(`http://localhost:3000/user/`, { withCredentials: true }).then(function(response) {
+		console.log(response.data)
+		next(response.data.email == undefined ? 0 : 1)
+	}.bind(this))
+})
+export default router
