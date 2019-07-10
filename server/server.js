@@ -15,7 +15,6 @@ const Video = require("./models/Video")
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-// app.use(cors({origin:['http://localhost:8080', 'http://localhost:3000'], methods:['GET', 'POST'], credentials: true}))
 app.use(cors({ credentials: true, origin: ['http://localhost:8080']}))
 
 app.use(session({
@@ -29,16 +28,11 @@ app.use(session({
 	}
 }));
 
-// app.use(function(req, res, next) {
-//   res.header('Access-Control-Allow-Origin', 'http://localhost:8080')//req.hostname);
-//   res.header('Access-Control-Allow-Credentials', true);
-//   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-  // next();
-// });
-
 app.get('/video/:id', (req, res) => {
 	Video.findOne({ id: req.params.id }, function (err, video) {
-		if (!err) { res.json(video)
+		if (!err) {
+			console.log(video)
+			res.json(video)
 		} else {
 			console.log (err)
 			res.send(501)
@@ -46,7 +40,7 @@ app.get('/video/:id', (req, res) => {
 	})
 })
 app.get('/listing/', (req, res) => {
-	Video.find({}).select("title uploadDate").then(function (videos){
+	Video.find({}).select("title uploadDate id").then(function (videos){
 		res.json(videos)
 	}, function (err) {
 		console.log(err)
@@ -54,7 +48,12 @@ app.get('/listing/', (req, res) => {
 	})
 })
 app.post('/video/', auth.checkAuthentication, function (req, res) {
-// app.post('/video/', function (req, res) {
+	console.log(req.body)
+
+	if (req.body.eventData == undefined || req.body.eventData.length < 2) {
+		res.send({ success: false, error: "Lacking event data"})
+		return
+	}
 	var video = new Video({
 		title: req.body.title,
 		description: req.body.description,
@@ -74,16 +73,6 @@ app.get('/user/', function (req, res) {
 		})
 	} else {
 		res.json(req.session)
-	}
-})
-app.get('/count', function (req, res) {
-	console.log(req.headers)
-	console.log(req.session)
-	if (req.session.count){
-		res.json(""+req.session.count++)
-	}else {
-		req.session.count = 10
-		res.send('first')
 	}
 })
 

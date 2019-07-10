@@ -118,6 +118,7 @@ canvas {
 	display: block;
 	margin-left: auto;
 	margin-right: auto;
+	margin-bottom: 10px;
 	touch-action: none;
 }
 .media-button {

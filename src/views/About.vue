@@ -1,7 +1,6 @@
 <template>
   <div class="about">
 	  {{ user }}
-	  {{ count}}
   </div>
 </template>
 <script>
@@ -14,16 +13,12 @@ export default {
 	},
 	data: function () {
 		return {
-			user: {},count:0
+			user: {}
 		}
 	},
 	methods: {
 	},
 	mounted: function() {
-		axios.get(`http://localhost:3000/count/`, { withCredentials: true }).then(function(response) {
-			this.count = response.data
-		}.bind(this))
-	
 		fetch(`http://localhost:3000/user/`, {
 			method: 'GET',
 			credentials: 'include',
