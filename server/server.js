@@ -47,9 +47,15 @@ app.get('/listing/', (req, res) => {
 		res.send(501)
 	})
 })
+app.get('/userlisting/', auth.checkAuthentication, (req, res) => {
+	Video.find({ uploader: req.session.userId }).select("title uploadDate id").then(function (videos){
+		res.json(videos)
+	}, function (err) {
+		console.log(err)
+		res.send(501)
+	})
+})
 app.post('/video/', auth.checkAuthentication, function (req, res) {
-	console.log(req.body)
-
 	if (req.body.eventData == undefined || req.body.eventData.length < 2) {
 		res.send({ success: false, error: "Lacking event data"})
 		return
@@ -58,7 +64,7 @@ app.post('/video/', auth.checkAuthentication, function (req, res) {
 		title: req.body.title,
 		description: req.body.description,
 		lengthTime: req.body.lengthTime,
-		uploader: "INCOMPLETE",
+		uploader: req.session.userId,
 		eventData: req.body.eventData
 	})
 	video.save()
@@ -102,9 +108,8 @@ app.post('/login/', async function (req, res) {
 					req.session.userId = user._id
 				} else {
 					req.session.userId = user._id
-
 				}
-				res.send({success:true})
+				res.send({success:true, user: { id: user.id }})
 				// res.json({
 				// 	success: true,
 				// 	message: 'Authentication successful!',

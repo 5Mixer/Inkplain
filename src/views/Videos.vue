@@ -37,7 +37,6 @@ export default {
 		axios.get(`http://localhost:3000/listing/`, { withCredentials: true }).then(function(response) {
 			this.videos = response.data
 		}.bind(this))
-	
 	}
 }
 </script>

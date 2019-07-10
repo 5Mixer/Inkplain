@@ -6,13 +6,13 @@ var VideoSchema = new mongoose.Schema({
 		type: Date,
 		default: Date.now
 	},
-	user: String, // short user id
 	id: {
 		type: String,
 		default: () => { return nanoid(8) }
 	},
 	title: String,
 	description: String,
+	uploader: String,
 	lengthTime: Number,
 	eventData: [Number]
 })

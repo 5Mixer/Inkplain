@@ -1,14 +1,36 @@
 <template>
 	<div id="app">
 		<div id="nav">
-			<router-link to="/">Annotati</router-link>
-			<router-link to="/about">About</router-link> 
-			<router-link to="/rec">Record</router-link> 
+			<span v-show="!authenticated">
+				<router-link to="/">Annotati</router-link>
+				<router-link to="/about">About</router-link> 
+			</span>
+			<span v-show="authenticated">
+				<router-link to="/manage">Video Manager</router-link> 
+				<router-link to="/rec">Record</router-link> 
+			</span>
 			<router-link to="/play">Videos</router-link>
 		</div>
 		<router-view/>
 	</div>
 </template>
+
+<script>
+const axios = require('axios')
+import Vue from 'vue'
+export default {
+	name: 'app',
+	data: function () {
+		return {
+			authenticated: !false
+		}
+	},
+	mounted: function () {
+		// axios.post('http://localhost:3000/video', video, { withCredentials: true }).then((response) => {
+		// })
+	}
+}
+</script>
 
 <style lang="scss">
 a {

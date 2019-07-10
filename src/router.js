@@ -5,6 +5,7 @@ import Login from './views/Login.vue'
 import Recording from './views/Recording.vue'
 import Videos from './views/Videos.vue'
 import Playback from './views/Playback.vue'
+import VideoManager from './views/VideoManager.vue'
 
 Vue.use(Router)
 
@@ -24,8 +25,13 @@ export default new Router({
 		},
 		{
 			path: '/rec',
-				name: 'recording',
-				component: Recording
+			name: 'recording',
+			component: Recording
+		},
+		{
+			path: '/manage/',
+			name: 'manage',
+			component: VideoManager
 		},
 		{
 			path: '/play/',

@@ -29,7 +29,6 @@ import AnnotationTools from '@/components/AnnotationTools.vue'
 import AnnotationCanvas from '@/components/Canvas.vue'
 const axios = require('axios')
 import Vue from 'vue'
-const bus = new Vue()
 export default {
 	name: 'home',
 	components: {
@@ -37,7 +36,7 @@ export default {
 	},
 	data: function () {
 		return {
-			bus: bus,
+			bus: new Vue(),
 			recording: false,
 			micActive: false,
 
@@ -52,32 +51,34 @@ export default {
 	},
 	methods: {
 		changeColour: function (colour) {
-			bus.$emit("colourPick", colour)
+			this.bus.$emit("colourPick", colour)
 		},
 		toggleRec: function () {
-			bus.$emit("recToggle")
+			this.bus.$emit("recToggle")
 			this.recording = !this.recording
 			this.initialRecord = true
 		},
 		toggleMic: function () {
-			bus.$emit("micToggle")
+			this.bus.$emit("micToggle")
 			this.micActive = !this.micActive
 		},
 		toolSelect: function (tool) {
-			bus.$emit("toolSelect",tool)
+			this.bus.$emit("toolSelect",tool)
 		},
 		clearCanvas: function () {
-			bus.$emit("clearCanvas")
+			this.bus.$emit("clearCanvas")
 		},
 		brushWidth: function (width) {
-			bus.$emit("brushWidth", width)
+			this.bus.$emit("brushWidth", width)
 		},
 		save: function () {
-			bus.$emit("save", this.title, this.description)
+			this.bus.$emit("save", this.title, this.description)
 		}
 	},
 	mounted: function () {
-		bus.$on("publish", (video) => {
+		if (this.bus == undefined)
+			this.bus = new Vue()
+		this.bus.$on("publish", (video) => {
 			axios.post('http://localhost:3000/video', video, { withCredentials: true }).then((response) => {
 				if (response.data.success)
 					this.$router.push({ name: 'playback', params: { id: response.data.id } })
