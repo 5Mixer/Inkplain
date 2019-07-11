@@ -25,12 +25,12 @@ export default {
 	name: 'app',
 	data: function () {
 		return {
-			authenticated: !false
+			authenticated: false
 		}
 	},
 	methods: {
 		logout: function () {
-			axios.post('http://localhost:3000/logout', { withCredentials: true }).then((response) => {
+			axios.get('http://localhost:3000/logout', { withCredentials: true }).then((response) => {
 				if (response.data.success)
 					this.$router.push({ name: 'home' })
 			})
@@ -38,15 +38,17 @@ export default {
 	},
 	watch:{
 		$route (to, from){
+			console.log("route change")
+			// this.authenticated = false
 			axios.get(`http://localhost:3000/user/`, { withCredentials: true }).then((response) => {
-				this.authenticated = response.data != undefined
+				this.authenticated = response.data.email != undefined
 			})
 		}
 	},
 
 	mounted: function () {
 		axios.get(`http://localhost:3000/user/`, { withCredentials: true }).then((response) => {
-			this.authenticated = response.data != undefined
+			this.authenticated = response.data.email != undefined
 		})
 	}
 }

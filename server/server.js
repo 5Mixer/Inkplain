@@ -21,6 +21,7 @@ app.use(session({
 	resave: false,
 	saveUninitialized: false,
 	secret: 'nwiobxrf3oif7bnwe',
+	unset: 'destroy',
 	// name: 'sessionstore',
 	store: new MongoStore({ mongooseConnection: mongoose.connection }),
 	cookie: {
@@ -81,11 +82,15 @@ app.post('/video/', auth.checkAuthentication, function (req, res) {
 })
 app.get('/user/', auth.checkAuthentication, function (req, res) {
 	if (req.session.userId) {
-		User.findById(req.session.userId, async function (err, user) {
-			res.json(user)
+		User.findOne({id: req.session.userId }, async function (err, user) {
+			if (err) {
+				res.json({success: false})
+			} else {
+				res.json(user)
+			}
 		})
 	} else {
-		res.json(req.session)
+		res.json({ success: false })
 	}
 })
 
@@ -101,32 +106,26 @@ app.post('/user/', async function (req, res) {
 			})
 			user.save(function (err) {
 				console.log(err)
-				req.session.userId = user._id
+				req.session.userId = user.id
 				res.send({ success: true })
 			})
 		}
 	})
 })
-app.post('/logout/', async function (req, res) {
-	req.session.destroy(function(result) {
-		res.clearCookie('connect.sid', { path: '/' }).send({ success: true })
-	});
+app.get('/logout/', function (req, res) {
+	req.session.destroy()
+	res.send({ success : true })
 })
 app.post('/login/', async function (req, res) {
 	User.findOne({ email: req.body.email }, async function (err, user) {
 		if (user != undefined) {
 			if (user.comparePassword(req.body.password)) {
 				if (req.session.userId){
-					req.session.userId = user._id
+					req.session.userId = user.id
 				} else {
-					req.session.userId = user._id
+					req.session.userId = user.id
 				}
 				res.send({success:true, user: { id: user.id }})
-				// res.json({
-				// 	success: true,
-				// 	message: 'Authentication successful!',
-				// 	session: req.session
-				// });
 			} else {
 				// Password didn't match
 				res.json({success: false})

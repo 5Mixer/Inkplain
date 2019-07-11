@@ -65,8 +65,9 @@ router.beforeEach((to, from, next) => {
 	}
 
 	axios.get(`http://localhost:3000/user/`, { withCredentials: true }).then(function(response) {
-		console.log(response.data)
-		next(response.data.email == undefined ? 0 : 1)
+		// Should the page transfer to the auth required page be cancelled?
+		next((response.success == false || response.data.email == undefined) ? false : undefined)
+
 	}.bind(this))
 })
 export default router

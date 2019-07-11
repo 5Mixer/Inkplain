@@ -5,7 +5,7 @@
 				Create annotation videos online 
 			</h1>
 
-			<img src="@/assets/screenOptimised.png" alt="" title="Screenshot of Annotati" width="600">
+			<img src="@/assets/screen small.png" alt="" title="Screenshot of Annotati" width="600">
 			
 			<p class="basicInfo">
 				Use your stylus to write on top of questions, a blank canvas, or documents.
