@@ -107,19 +107,15 @@ export default {
 }
 </script>
 <style>
-audio {
-	width: 100%;
-	margin-left: auto;
-	margin-right: auto;
-}
 canvas {
 	height: 100%;
-	border: 1px solid black;
 	display: block;
 	margin-left: auto;
 	margin-right: auto;
 	margin-bottom: 10px;
 	touch-action: none;
+	border-radius: 3px;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
 }
 .media-button {
 	display: inline-block;

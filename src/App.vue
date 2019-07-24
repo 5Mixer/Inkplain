@@ -1,20 +1,22 @@
 <template>
-	<div id="app">
-		<div id="nav">
-			<span v-show="!authenticated">
-				<router-link to="/">Annotati</router-link>
-				<router-link to="/about">About</router-link> 
-			</span>
-			<span v-show="authenticated">
-				<router-link to="/manage">Video Manager</router-link> 
-				<router-link to="/rec">Record</router-link> 
-			</span>
-			<router-link to="/play">Videos</router-link>
-			<span v-show="authenticated">
-				<span class="router-link" @click="logout()">Log out</span> 
-			</span>
+	<div>
+		<div class="view">
+			<div class="navigation">
+				<span v-show="!authenticated">
+					<router-link to="/">Inkplain</router-link>
+					<router-link to="/about">About</router-link> 
+				</span>
+				<span v-show="authenticated">
+					<router-link to="/manage">Video Manager</router-link> 
+					<router-link to="/record">Record</router-link> 
+				</span>
+				<router-link to="/play">Videos</router-link>
+				<span v-show="authenticated" class="right">
+					<span class="router-link" @click="logout()">Log out</span> 
+				</span>
+			</div>
+			<router-view/>
 		</div>
-		<router-view/>
 	</div>
 </template>
 
@@ -54,26 +56,41 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style>
+.navigation {
+	display: block;
+	width: 100%;
+	margin-bottom: 1em;
+	/* background-color: #eee; */
+	border: none;
+	border-radius: 3px;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+}
+.view {
+	margin: 2em;
+	margin-top: 1em;
+	margin-bottom: 1em;
+}
 a, .router-link {
 	cursor: pointer;
     color: #222;
     text-decoration: none;
-    background: linear-gradient(to top, #ff7f7f66 5%, transparent 5%);
     display:inline-block;
 	font-weight: 400;
 	font-family: 'Heebo', serif; 
 	padding: .2em;
 	margin: .3em;
+	
+	border: none;
+	border-radius: 3px;
+	/* box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); */
 }
 a:hover, .router-link:hover {
-    background: linear-gradient(to top,  #ff7f7f66 50%, transparent 50%);
-}
-
-html {
-	box-sizing: border-box;
+	background: #eee;
+    /* background: linear-gradient(to top,  #ff7f7f66 50%, transparent 50%); */
 }
 body, h1, h2, h3, h4, h5, h6, p, ol, ul, textarea {
+	box-sizing: border-box;
 	padding: 0;
 	color: #111;
 	font-family: 'Heebo', serif; 
@@ -89,9 +106,6 @@ input,textarea {
 	font-size: 1em;
 	line-height: 1.4em;
 	border: 1px solid gray;
-}
-body {
-	margin: 2em;
 }
 h1 {
 	font-size: 2em; 
@@ -136,6 +150,14 @@ ol, ul {
 	-moz-user-select: none; /* Firefox */
 	-ms-user-select: none; /* IE10+/Edge */
 	user-select: none; /* Standard */
+	
+	display: inline-block;
+	border: none;
+	border-radius: 3px;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+}
+.right {
+	float: right;
 }
 
 </style>

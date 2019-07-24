@@ -47,11 +47,12 @@ export default {
 }
 .video {
 	display: inline-block;
-	border: solid 1px gray;
 	margin: 2em;
 	margin-left: 0em;
 	padding: 1em;
-	width: calc(50% - 2em);
+	width: calc(30% - 2em);
+	border-radius: 3px;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
 }
 .meta {
 	color: gray;

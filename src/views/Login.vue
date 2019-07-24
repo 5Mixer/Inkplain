@@ -64,7 +64,7 @@ export default {
 
 			axios.post('http://localhost:3000/login', form, { withCredentials: true}).then(function (response){
 				if (response.data.success) {
-					this.$router.push({ name: "about" })
+					this.$router.push({ name: "manage" })
 				} else {
 					this.errorMessage = "Failed to login."
 				}

@@ -76,7 +76,7 @@ export default {
 
 			axios.post('http://localhost:3000/user', form).then(function (response){
 				if (response.data.success) {
-					this.$router.push({ name: "playback" })
+					this.$router.push({ name: "manage" })
 				} else {
 					this.errorMessage = "That email already has an account."
 				}

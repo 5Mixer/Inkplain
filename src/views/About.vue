@@ -1,31 +1,13 @@
 <template>
   <div class="about">
-	  {{ user }}
+	  <h1>Inkplain is a cloud platform for creating annotation videos.</h1>
+	  <p>Inkplain may be ideal for your tutoring or teaching needs. Here are some features.</p>
+	  <ul>
+	  	<li>Free. No watermarks or catches.</li>
+	  	<li>No downloads required.</li>
+		<li>Due to a unique storage method, videos upload and download super fast.</li>
+		<li>Created videos are instantly sharable with a unique link.</li>
+	  </ul>
+	  <p>Give it a shot!</p>
   </div>
 </template>
-<script>
-const axios = require('axios')
-
-export default {
-	name: 'about',
-	components: {
-		
-	},
-	data: function () {
-		return {
-			user: {}
-		}
-	},
-	methods: {
-	},
-	mounted: function() {
-		fetch(`http://localhost:3000/user/`, {
-			method: 'GET',
-			credentials: 'include',
-		})
-			.then(async function(response){
-				this.user = await response.json()
-			}.bind(this))
-	}
-}
-</script>

@@ -1,10 +1,9 @@
 
 <template>
   <div class="about">
-	  <h2>User</h2>
-	  User: {{ user.email }}
+	  <h2>User: {{ user.email }}</h2>
 
-	  <h2>Videos ({{ videos.length }})</h2>
+	  <h2>Your videos ({{ videos.length }})</h2>
 	  <div v-for="video in videos" class="video">
 		  <router-link :to="{ name: 'playback', params: { id: video.id } }">{{ video.title }}</router-link>
 		  <div class="meta" :title="'Uploaded ' + fullHumanDate(video.uploadDate)">{{new Date(video.uploadDate).toLocaleDateString("en-US") }}</div>
@@ -54,14 +53,6 @@ export default {
 }
 </script>
 <style>
-.video {
-	display: inline-block;
-	border: solid 1px gray;
-	margin: 2em;
-	margin-left: 0em;
-	padding: 1em;
-	width: calc(50% - 2em);
-}
 .meta {
 	color: gray;
 	font-size: .9em;

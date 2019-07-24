@@ -1,22 +1,25 @@
 <template>
 	<div class="tool-container">
-		<span class="tool-button" @click="toolSelect('pen')" v-bind:class="{ active: activeTool == 'pen'}" >
+		<span class="button tool-button" @click="toolSelect('pen')" v-bind:class="{ active: activeTool == 'pen'}" >
 			<object class="toolImage" ref="pen" :data="penSvg" type="image/svg+xml"></object>
 		</span>
-		<span class="tool-button" @click="toolSelect('highlighter')" v-bind:class="{ active: activeTool == 'highlighter'}" >
+		<span class="button tool-button" @click="toolSelect('highlighter')" v-bind:class="{ active: activeTool == 'highlighter'}" >
 			<object class="toolImage" ref="highlighter" :data="highlighterSvg" type="image/svg+xml"></object>
 		</span>
-		<span class="tool-button" @click="toolSelect('eraser')" v-bind:class="{ active: activeTool == 'eraser'}" >
+		<span class="button tool-button" @click="toolSelect('eraser')" v-bind:class="{ active: activeTool == 'eraser'}" >
 			<object class="toolImage" :data="eraserSvg" type="image/svg+xml"></object>
 		</span>
-		<span class="tool-button" @click="clearCanvas()">Clear</span>
+		<span class="button tool-button" @click="clearCanvas()">Clear</span>
 
 		
-		<span v-bind:class="{ red: recording }" class="tool-button" @click="toggleRecording">{{recording ? 'Recording' : 'Record'}}</span> <span v-bind:class="{ blue: micActive }" class="tool-button" @click="toggleMicrophone">{{micActive ? 'Mic On' : 'Mic Off'}}</span>
+		<span v-bind:class="{ recording: recording }" class="button tool-button" @click="toggleRecording">{{recording ? 'Recording' : 'Record'}}</span> <span v-bind:class="{ blue: micActive }" class="button tool-button" @click="toggleMicrophone">{{micActive ? 'Mic On' : 'Mic Off'}}</span>
 
 		<colour-picker @colourPick="colourPick"></colour-picker>
-		<span class="tool-button">
-			<input type="range" min="1" max="30" value="2" class="thicknessSlider" v-on:change="brushWidth">
+		<span class="button tool-button">
+			<span>
+				Thickness
+			</span>
+			<input type="range" min="1" max="30" value="2" class="thicknessSlider" v-on:change="brushWidth" v-on:input="brushWidthVisualPreview">
 		</span>
 	</div>
 </template>
@@ -63,17 +66,18 @@ export default {
 		clearCanvas: function () {
 			this.$emit("clearCanvas")
 		},
-		brushWidth: function (e) {
+		brushWidthVisualPreview: function (e) {
 			this.$refs['pen'].getSVGDocument().getElementById("penLine").style["stroke-width"] = e.target.value /4
 			this.$refs['highlighter'].getSVGDocument().getElementById("highlighterLine").style["stroke-width"] = e.target.value /4
-
+		},
+		brushWidth: function (e) {
 			this.$emit("brushWidth", e.target.value)
 		}
 	}
 }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 .tool-container {
 	/* background-color: #eee; */
 	height: 100%;
@@ -83,32 +87,13 @@ export default {
 	box-sizing: border-box;
 }
 .tool-button {
-	display: block;
-	cursor: pointer;
-
-	background-color: white;
-	text-align: center;
-
-	margin: 5px;
-	margin-top: 0;
-	padding: 20px;
-	
-	line-height: calc(10px - .5em);
-
-	font-size: 1em;
-	border: 1px solid gray;
-
-	-webkit-user-select: none; /* Safari */
-	-moz-user-select: none; /* Firefox */
-	-ms-user-select: none; /* IE10+/Edge */
-	user-select: none; /* Standard */
-
 	overflow: hidden;
+	width: 8em;
 }
 .active {
 	background: #4286f433;
 }
-.red {
+.recording {
 	border: solid 1px red;
     box-shadow: 0 0 3px red;
 	font-weight: bold;
@@ -120,6 +105,35 @@ export default {
 }
 .thicknessSlider {
 	width: 100%;
+	padding: 0;
+}
+span {
+	padding: 10;
+}
+
+.thicknessSlider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 15px;
+  background: #d3d3d3;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+
+.thicknessSlider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: 50%;
+  background: #333;
+  cursor: pointer;
+}
+
+.thicknessSlider::-moz-range-thumb {
+  border-radius: 50%;
+  background: #333;
+  cursor: pointer;
 }
 .toolImage {
 	/*transition: filter 0.1s ease-in-out;*/

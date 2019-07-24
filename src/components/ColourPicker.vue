@@ -32,6 +32,9 @@ export default {
 	border: solid 1px grey;
 	margin: 5px;
 	padding: 10px;
+	border: none;
+	border-radius: 3px;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
 }
 .colour-swatch {
 	display: inline-block;
