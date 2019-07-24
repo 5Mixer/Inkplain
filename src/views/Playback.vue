@@ -30,7 +30,7 @@ export default {
 	methods: {
 	},
 	mounted: function() {
-		axios.get(`http://localhost:3000/video/${this.$route.params.id}`, { withCredentials: true }).then((response) => {
+		axios.get(`api/video/${this.$route.params.id}`, { withCredentials: true }).then((response) => {
 			this.videoData = response.data
 			bus.$emit('load', response.data)
 			bus.$emit('enablePlayback')

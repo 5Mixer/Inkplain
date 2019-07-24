@@ -34,7 +34,7 @@ export default {
 		}
 	},
 	mounted: function() {
-		axios.get(`http://localhost:3000/listing/`, { withCredentials: true }).then(function(response) {
+		axios.get(`api/listing/`, { withCredentials: true }).then(function(response) {
 			this.videos = response.data
 		}.bind(this))
 	}

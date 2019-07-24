@@ -62,7 +62,7 @@ export default {
 				return
 			}
 
-			axios.post('http://localhost:3000/login', form, { withCredentials: true}).then(function (response){
+			axios.post('api/login', form, { withCredentials: true}).then(function (response){
 				if (response.data.success) {
 					this.$router.push({ name: "manage" })
 				} else {

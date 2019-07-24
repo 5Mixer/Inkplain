@@ -79,7 +79,7 @@ export default {
 		if (this.bus == undefined)
 			this.bus = new Vue()
 		this.bus.$on("publish", (video) => {
-			axios.post('http://localhost:3000/video', video, { withCredentials: true }).then((response) => {
+			axios.post('api/video', video, { withCredentials: true }).then((response) => {
 				if (response.data.success)
 					this.$router.push({ name: 'playback', params: { id: response.data.id } })
 			})
