@@ -74,7 +74,7 @@ export default {
 				return
 			}
 
-			axios.post('api/user', form).then(function (response){
+			axios.post('/api/user', form).then(function (response){
 				if (response.data.success) {
 					this.$router.push({ name: "manage" })
 				} else {

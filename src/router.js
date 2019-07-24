@@ -63,7 +63,7 @@ router.beforeEach((to, from, next) => {
 		return
 	}
 
-	axios.get(`api/user/`, { withCredentials: true }).then(function(response) {
+	axios.get(`/api/user/`, { withCredentials: true }).then(function(response) {
 		// Should the page transfer to the auth required page be cancelled?
 		next((response.success == false || response.data.email == undefined) ? false : undefined)
 

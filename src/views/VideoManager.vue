@@ -33,7 +33,7 @@ export default {
 			return video.title.indexOf(this.searchQuery) != -1
 		},
 		deleteVideo: function (video) {
-			axios.post(`api/deletevideo/`, video, { withCredentials: true }).then((response) => {
+			axios.post(`/api/deletevideo/`, video, { withCredentials: true }).then((response) => {
 				if (response.data.success) {
 					// If successful, remove on the client side without redownloading video listing
 					this.videos.splice(this.videos.indexOf(video), 1)
@@ -43,10 +43,10 @@ export default {
 		}
 	},
 	mounted: function() {
-		axios.get(`api/userlisting/`, { withCredentials: true }).then((response) => {
+		axios.get(`/api/userlisting/`, { withCredentials: true }).then((response) => {
 			this.videos = response.data
 		})
-		axios.get(`api/user/`, { withCredentials: true }).then((response) => {
+		axios.get(`/api/user/`, { withCredentials: true }).then((response) => {
 			this.user = response.data
 		})
 	}

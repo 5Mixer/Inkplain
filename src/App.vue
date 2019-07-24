@@ -32,7 +32,7 @@ export default {
 	},
 	methods: {
 		logout: function () {
-			axios.get('api/logout', { withCredentials: true }).then((response) => {
+			axios.get('/api/logout', { withCredentials: true }).then((response) => {
 				if (response.data.success)
 					this.$router.push({ name: 'home' })
 			})
@@ -40,16 +40,14 @@ export default {
 	},
 	watch:{
 		$route (to, from){
-			console.log("route change")
-			// this.authenticated = false
-			axios.get(`api/user/`, { withCredentials: true }).then((response) => {
+			axios.get(`/api/user/`, { withCredentials: true }).then((response) => {
 				this.authenticated = response.data.email != undefined
 			})
 		}
 	},
 
 	mounted: function () {
-		axios.get(`api/user/`, { withCredentials: true }).then((response) => {
+		axios.get(`/api/user/`, { withCredentials: true }).then((response) => {
 			this.authenticated = response.data.email != undefined
 		})
 	}
