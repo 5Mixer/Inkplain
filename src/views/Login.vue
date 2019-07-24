@@ -2,7 +2,7 @@
 	<div class="home">
 		<div class="hero">
 			<div class="form">
-				<h2>Login to Annotati</h2>
+				<h2>Login to Inkplain</h2>
 				<table>
 					<tr>
 						<td>
@@ -23,7 +23,7 @@
 				</table>
 				<div class="error" v-if="errorMessage != ''">{{ errorMessage }}</div>
 				<br>
-				<div class="register button" @click="login()">Login to Annotati</div>
+				<div class="register button" @click="login()">Login to Inkplain</div>
 			</div>
 			
 			<div>

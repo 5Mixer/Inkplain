@@ -2,8 +2,9 @@
 	<div class="home">
 		<div class="hero">
 			<h1>
-				Create annotation videos online 
+				Inkplain - Create annotation videos online 
 			</h1>
+			<h2>It's like explaining, but with virtual ink.</h2>
 
 			<img src="@/assets/screen small.png" alt="" title="Screenshot of Annotati" width="600">
 			

@@ -17,7 +17,7 @@
 				<button class="tool-button" @click="save">Publish</button>
 				<div v-if="published">
 					<span>Accessible at </span>
-					<a href="">annotatii.com/play/{{publishId}}</a>
+					<a :href="'inkplain.com/play/' + publishId">inkplain.com/play/{{publishId}}</a>
 				</div>
 			</div>
 		</div>
