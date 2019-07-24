@@ -29,7 +29,7 @@ app.use(session({
 	}
 }));
 
-app.get('api/video/:id', (req, res) => {
+app.get('/api/video/:id', (req, res) => {
 	Video.findOne({ id: req.params.id }, function (err, video) {
 		if (!err) {
 			console.log(video)
@@ -40,7 +40,7 @@ app.get('api/video/:id', (req, res) => {
 		}
 	})
 })
-app.get('api/listing/', (req, res) => {
+app.get('/api/listing/', (req, res) => {
 	Video.find({}).select("title uploadDate id").then(function (videos){
 		res.json(videos)
 	}, function (err) {
@@ -48,7 +48,7 @@ app.get('api/listing/', (req, res) => {
 		res.send(501)
 	})
 })
-app.get('api/userlisting/', auth.checkAuthentication, (req, res) => {
+app.get('/api/userlisting/', auth.checkAuthentication, (req, res) => {
 	Video.find({ uploader: req.session.userId }).select("title uploadDate id").then(function (videos){
 		res.json(videos)
 	}, function (err) {
@@ -56,7 +56,7 @@ app.get('api/userlisting/', auth.checkAuthentication, (req, res) => {
 		res.send(501)
 	})
 })
-app.post('api/deletevideo/', auth.checkAuthentication, function (req, res) {
+app.post('/api/deletevideo/', auth.checkAuthentication, function (req, res) {
 	Video.deleteOne({ uploader: req.session.userId, id: req.body.id }).then(function (result){
 		if (result.ok) {
 			res.send({ success: true })
@@ -65,7 +65,7 @@ app.post('api/deletevideo/', auth.checkAuthentication, function (req, res) {
 		}
 	})
 })
-app.post('api/video/', auth.checkAuthentication, function (req, res) {
+app.post('/api/video/', auth.checkAuthentication, function (req, res) {
 	if (req.body.eventData == undefined || req.body.eventData.length < 2) {
 		res.send({ success: false, error: "Lacking event data"})
 		return
@@ -80,7 +80,7 @@ app.post('api/video/', auth.checkAuthentication, function (req, res) {
 	video.save()
 	res.send({ success: true, id: video.id})
 })
-app.get('api/user/', auth.checkAuthentication, function (req, res) {
+app.get('/api/user/', auth.checkAuthentication, function (req, res) {
 	if (req.session.userId) {
 		User.findOne({id: req.session.userId }, async function (err, user) {
 			if (err) {
@@ -94,7 +94,7 @@ app.get('api/user/', auth.checkAuthentication, function (req, res) {
 	}
 })
 
-app.post('api/user/', async function (req, res) {
+app.post('/api/user/', async function (req, res) {
 	User.find({ email: req.body.email }, async function (err, docs) {
 		if (docs.length > 0) {
 			res.send({ success: false, error: "Email taken" })
@@ -112,11 +112,11 @@ app.post('api/user/', async function (req, res) {
 		}
 	})
 })
-app.get('api/logout/', function (req, res) {
+app.get('/api/logout/', function (req, res) {
 	req.session.destroy()
 	res.send({ success : true })
 })
-app.post('api/login/', async function (req, res) {
+app.post('/api/login/', async function (req, res) {
 	User.findOne({ email: req.body.email }, async function (err, user) {
 		if (user != undefined) {
 			if (user.comparePassword(req.body.password)) {
