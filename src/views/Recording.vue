@@ -144,13 +144,17 @@ textarea {
 	box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
 }
 .publishPanel {
+	position: absolute;
+	top: 20%;
 	min-width: 50%;
 	width: 50%;
 	max-width: 50%;
 	margin: auto;
 	display: block;
-	border: solid 1px gray;
 	padding: 20px;
+	border: none;
+	border-radius: 3px;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
 
 }
 .publishSection {
