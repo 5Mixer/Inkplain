@@ -1,6 +1,6 @@
 <template>
 	<div>
-
+		<div class="notice" v-show="!recording">Note that you must click record to begin annotating.</div>
 		<div class="recordingSection left">
 			<annotation-canvas :bus="bus" :recording="recording" :micActive="micActive"></annotation-canvas>
 		</div>
@@ -111,6 +111,11 @@ textarea {
 	font-size: 1em;
 	min-height: 9em;
 	max-height: 15em;
+}
+.notice {
+	border: none;
+	border-radius: 3px;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
 }
 .tool-button {
 	display: block;

@@ -64,7 +64,7 @@ export default {
 
 			axios.post('/api/login', form, { withCredentials: true}).then(function (response){
 				if (response.data.success) {
-					this.$router.push({ name: "manage" })
+					this.$router.push({ name: "recording" })
 				} else {
 					this.errorMessage = "Failed to login."
 				}

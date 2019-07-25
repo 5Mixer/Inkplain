@@ -66,7 +66,7 @@ export default {
 		signup: function () {
 			var form = { email: this.email, password: this.password }
 			
-			if (this.email == "" || this.password == "") {
+			if (this.email == "" || this.password == "" || this.email.indexOf("@") == -1) {
 				this.errorMessage = "Please complete the form."
 				return
 			}
@@ -77,7 +77,7 @@ export default {
 
 			axios.post('/api/user', form).then(function (response){
 				if (response.data.success) {
-					this.$router.push({ name: "manage" })
+					this.$router.push({ name: "recording" })
 				} else {
 					this.errorMessage = "That email already has an account."
 				}

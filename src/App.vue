@@ -7,10 +7,10 @@
 					<router-link to="/about">About</router-link> 
 				</span>
 				<span v-show="authenticated">
-					<router-link to="/manage">Video Manager</router-link> 
-					<router-link to="/record">Record</router-link> 
+					<router-link to="/manage">Private Video Manager</router-link> 
+					<router-link to="/record">Create Video</router-link> 
 				</span>
-				<router-link to="/play">Videos</router-link>
+				<router-link to="/play">Public Videos</router-link>
 				<span v-show="authenticated" class="right">
 					<span class="router-link" @click="logout()">Log out</span> 
 				</span>
