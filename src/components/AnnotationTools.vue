@@ -12,14 +12,15 @@
 		<span class="button tool-button" @click="clearCanvas()">Clear</span>
 
 		
-		<span v-bind:class="{ recording: recording }" class="button tool-button" @click="toggleRecording">{{recording ? 'Recording' : 'Record'}}</span> <span v-bind:class="{ blue: micActive }" class="button tool-button" @click="toggleMicrophone">{{micActive ? 'Mic On' : 'Mic Off'}}</span>
+		<span v-bind:class="{ recording: recording }" class="button tool-button" @click="toggleRecording">{{recording ? 'Recording' : 'Record'}}</span>
+		<!-- <span v-bind:class="{ blue: micActive }" class="button tool-button" @click="toggleMicrophone">{{micActive ? 'Mic On' : 'Mic Off'}}</span> -->
 
 		<colour-picker @colourPick="colourPick"></colour-picker>
 		<span class="button tool-button">
-			<span>
+			<span class="padding">
 				Thickness
 			</span>
-			<input type="range" min="1" max="30" value="2" class="thicknessSlider" v-on:change="brushWidth" v-on:input="brushWidthVisualPreview">
+			<input type="range" min="1" max="30" value="2" v-on:change="brushWidth" v-on:input="brushWidthVisualPreview">
 		</span>
 	</div>
 </template>
@@ -89,6 +90,9 @@ export default {
 .tool-button {
 	overflow: hidden;
 	width: 8em;
+}
+.padding {
+	padding: .5em;
 }
 .active {
 	background: #4286f433;
