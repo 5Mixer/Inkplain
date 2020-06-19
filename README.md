@@ -1,4 +1,5 @@
-# annotation-app
+# annotation-app - Noterist
+App for creating and viewing digitally handwritten videos. Stores videos as a series of input events, rather than raster frames.
 
 ## Project setup
 ```
