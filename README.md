@@ -1,4 +1,4 @@
-# annotation-app - Noterist
+# annotation-app - Inkplain.com
 App for creating and viewing digitally handwritten videos. Stores videos as a series of input events, rather than raster frames.
 
 ## Project setup
