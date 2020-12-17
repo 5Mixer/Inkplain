@@ -5,6 +5,9 @@ Programmed as part of a High School course in 2019 that required we create some 
 
 Not actively maintained or cleaned.
 
+## Screenshot
+![Screenshot](/src/assets/screen.png)
+
 ## Project setup
 ```
 npm install
